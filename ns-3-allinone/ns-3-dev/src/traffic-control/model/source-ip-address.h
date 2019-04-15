@@ -25,14 +25,14 @@ public:
   static TypeId GetTypeId (void);
 
   SourceIpAddress ();
-  virtual ~SourceIpAddress ();
+  ~SourceIpAddress ();
 
   /**
    * Standard value used by packet filters to indicate that no match was possible.
    */
   //static const int PF_NO_MATCH = -1;
 
-  virtual bool Match (Ptr<Packet> packet) const = 0;
+  bool Match (Ptr<Packet> packet);
 
 
 private:

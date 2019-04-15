@@ -13,15 +13,16 @@
 namespace ns3 {
 
 class ProtocolNumber: public FilterElement {
+  
 public:
 
   static TypeId GetTypeId (void);
 
   ProtocolNumber ();
-  virtual ~ProtocolNumber ();
+  ~ProtocolNumber ();
   
 
-  virtual bool Match (Ptr<Packet> packet) const = 0;
+  bool Match (Ptr<Packet> packet);
 
 
 private:

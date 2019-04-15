@@ -25,21 +25,21 @@
 #include "ppp-header.h" 
 #include "ns3/udp-header.h"
 #include "ns3/ipv4-header.h" 
-#include "source-ip-address.h"
+#include "trafficClass.h"
 #include "stdio.h"
 #include <iostream>
 
 namespace ns3 {
 
-    NS_LOG_COMPONENT_DEFINE ("SourceIpAddress");
+    NS_LOG_COMPONENT_DEFINE ("TrafficClass");
 
 
-    NS_OBJECT_ENSURE_REGISTERED (SourceIpAddress);
+    NS_OBJECT_ENSURE_REGISTERED (TrafficClass);
 
     TypeId 
-    SourceIpAddress::GetTypeId (void)
+    TrafficClass::GetTypeId (void)
     {
-    static TypeId tid = TypeId ("ns3::SourceIpAddress")
+    static TypeId tid = TypeId ("ns3::TrafficClass")
         .SetParent<Object> ()
         .SetGroupName ("TrafficControl")
     ;
@@ -47,40 +47,49 @@ namespace ns3 {
     }
 
 
-    SourceIpAddress::SourceIpAddress ()
+    TrafficClass::TrafficClass ()
     {
     NS_LOG_FUNCTION (this);
     }
 
-    SourceIpAddress::~SourceIpAddress()
+    TrafficClass::~TrafficClass()
     {
     NS_LOG_FUNCTION (this); 
     }
 
     
-    bool
-    SourceIpAddress::Match (Ptr<Packet> packet) 
+    bool TrafficClass::Match(Ptr<Packet> packet) 
     {
     NS_LOG_FUNCTION (this << packet);
     
 
-    Ipv4Header ipv4Header;
-    packet->PeekHeader(ipv4Header);
+    
+    
 
     
-    Ipv4Address Ipv4Address =ipv4Header.GetSource();
 
-    
-    if(Ipv4Address.IsEqual(value)){
-        std::cout<<" Matched Ipv4Address:" << Ipv4Address <<std::endl;
-        return true;
-    }  else{
-        std::cout<<" Not Matched Ipv4Address:" << Ipv4Address <<std::endl;
-        return false;
 
-    } 
+    /**
+     * TODO
+     * 
+     * */
+
+    return true;
 
     }
+
+
+    bool TrafficClass::Enqueue (Ptr<Packet> packet){
+      m_queue.Enqueue(packet);
+      return true;
+
+    }
+  
+    Ptr<Packet> Dequeue(){
+      
+    }
+
+
 
 
 }// namespace ns3
