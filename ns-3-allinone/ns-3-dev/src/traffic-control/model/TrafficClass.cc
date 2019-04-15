@@ -25,15 +25,13 @@
 #include "ppp-header.h" 
 #include "ns3/udp-header.h"
 #include "ns3/ipv4-header.h" 
-#include "trafficClass.h"
+#include "TrafficClass.h"
 #include "stdio.h"
 #include <iostream>
 
 namespace ns3 {
 
     NS_LOG_COMPONENT_DEFINE ("TrafficClass");
-
-
     NS_OBJECT_ENSURE_REGISTERED (TrafficClass);
 
     TypeId 
@@ -49,47 +47,32 @@ namespace ns3 {
 
     TrafficClass::TrafficClass ()
     {
-    NS_LOG_FUNCTION (this);
+      NS_LOG_FUNCTION (this);
     }
 
     TrafficClass::~TrafficClass()
     {
-    NS_LOG_FUNCTION (this); 
+      NS_LOG_FUNCTION (this); 
     }
 
     
     bool TrafficClass::Match(Ptr<Packet> packet) 
     {
-    NS_LOG_FUNCTION (this << packet);
-    
+      NS_LOG_FUNCTION (this << packet);
 
-    
-    
-
-    
-
-
-    /**
-     * TODO
-     * 
-     * */
-
-    return true;
-
+      //TODO
+  
+      return true;
     }
 
 
     bool TrafficClass::Enqueue (Ptr<Packet> packet){
-      m_queue.Enqueue(packet);
+      m_queue -> Enqueue(packet);
       return true;
-
     }
   
-    Ptr<Packet> Dequeue(){
-      
+    Ptr<ns3::Packet> Dequeue(){
+      //TODO
     }
-
-
-
 
 }// namespace ns3

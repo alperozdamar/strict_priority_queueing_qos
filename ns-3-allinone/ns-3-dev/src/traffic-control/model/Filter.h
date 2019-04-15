@@ -13,20 +13,18 @@
 namespace ns3 {
 
 class Filter: public Object {
-public:
+  public:
 
-std::vector<FilterElement> elements; 
-
-//static TypeId GetTypeId (void);
 
   Filter ();
   ~Filter ();
-  
 
-  bool Match (Ptr<Packet> packet);  
+  //static TypeId GetTypeId (void);
+  std::vector<ns3::FilterElement*> elements; //TODO check for ns3::FilterElement*
+  bool Match (Ptr<ns3::Packet> packet);  
 
 };
 
 } // namespace ns3
 
-#endif /* FilterElement */
+#endif /* FILTER_H */

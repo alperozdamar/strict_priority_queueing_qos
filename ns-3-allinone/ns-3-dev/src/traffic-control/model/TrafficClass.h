@@ -8,7 +8,7 @@
 #include "ns3/pointer.h"
 #include "queue-disc.h"
 #include "ns3/queue.h" 
-#include "filter.h"
+#include "Filter.h"
 
 namespace ns3 {
 
@@ -21,13 +21,10 @@ public:
   TrafficClass ();
   ~TrafficClass ();
 
-  std::vector<Filter> filters;  
-
-  bool Enqueue (Ptr<Packet> packet);
-  
-  Ptr<Packet> Dequeue();
-
-  bool Match (Ptr<Packet> packet); 
+  std::vector<Filter*> filters;  
+  bool Enqueue (Ptr<ns3::Packet> packet);
+  Ptr<ns3::Packet> Dequeue();
+  bool Match (Ptr<ns3::Packet> packet); 
 
 
 private:
@@ -36,13 +33,11 @@ private:
   uint32_t maxPackets;
   uint32_t maxBytes;
   double_t weight;
-  uint32_t priorityLevel;
+  uint32_t priority_level;
   bool isDefault;
-  Ptr<Queue<Packet>> m_queue;   
-
-
+  Ptr<ns3::Queue<ns3::Packet>> m_queue;  
 };
-
+  //PacketFilter
 } // namespace ns3
 
-#endif /* TrafficClass */
+#endif /* TRAFFICCLASS_H */

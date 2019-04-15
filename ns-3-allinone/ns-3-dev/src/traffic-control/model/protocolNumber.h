@@ -8,7 +8,7 @@
 #include "ns3/ppp-header.h"
 #include "ns3/pointer.h"
 #include "queue-disc.h"
-#include "filterElement.h"
+#include "FilterElement.h"
 
 namespace ns3 {
 
@@ -22,7 +22,7 @@ public:
   ~ProtocolNumber ();
   
 
-  bool Match (Ptr<Packet> packet);
+  bool Match (Ptr<ns3::Packet> packet);
 
 
 private:
@@ -32,4 +32,4 @@ private:
 
 } // namespace ns3
 
-#endif /* ProtocolNumber */
+#endif /* PROTOCOL_NUMBER_H */
