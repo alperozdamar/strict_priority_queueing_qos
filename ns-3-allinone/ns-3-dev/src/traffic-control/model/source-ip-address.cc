@@ -22,42 +22,18 @@ namespace ns3 {
     NS_LOG_FUNCTION (this); 
     }
 
-
-    int32_t
-    SourceIpAddress::Classify (Ptr<QueueDiscItem> item) const
-    {
-    NS_LOG_FUNCTION (this << item);
-
-    if (!CheckProtocol (item))
-    {
-        NS_LOG_LOGIC ("Unable to classify packets of this protocol");
-        return PF_NO_MATCH;
-    }
-
-    return DoClassify (item);
-    }
-
+    
     bool
     SourceIpAddress::Match (Ptr<Packet> packet) const
     {
     NS_LOG_FUNCTION (this << packet);
-
-    if (!CheckProtocol (packet))
-    {
-        NS_LOG_LOGIC ("Unable to classify packets of this protocol");
-        return PF_NO_MATCH;
-    }
-
-
+        
     /**
     *
-    * TODO:
-    * 
-    * 
+    * TODO:    
     **/
 
-
-    return DoClassify (packet);
+    return true;
     }
 
 
