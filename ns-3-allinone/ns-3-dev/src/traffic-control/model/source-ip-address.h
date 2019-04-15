@@ -8,7 +8,7 @@
 #include "ns3/ppp-header.h"
 #include "ns3/pointer.h"
 #include "queue-disc.h"
-
+#include "filterElement.h" 
 
 namespace ns3 {
 
@@ -19,7 +19,7 @@ namespace ns3 {
  * PacketFilter is the abstract base class for filters used by queue discs
  * to classify packets.
  */
-class SourceIpAddress: public Object {
+class SourceIpAddress: public FilterElement {
 public:
 
   static TypeId GetTypeId (void);
