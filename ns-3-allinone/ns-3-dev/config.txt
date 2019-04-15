@@ -1,0 +1,4 @@
+numberOfQueue=2
+queue1priority=3
+queue2priority=1
+
