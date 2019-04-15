@@ -1,12 +1,17 @@
+
 #ifndef SOURCE_IP_ADDRESS_H
 #define SOURCE_IP_ADDRESS_H
 
-#include "ns3/object.h"
-#include "ipv4-address.h"
+
+#include "ns3/log.h"
+#include "ns3/integer.h"
+#include "ns3/ppp-header.h"
+#include "ns3/pointer.h"
+#include "queue-disc.h"
+
 
 namespace ns3 {
 
-class QueueDiscItem;
 
 /**
  * \ingroup traffic-control
@@ -16,11 +21,8 @@ class QueueDiscItem;
  */
 class SourceIpAddress: public Object {
 public:
-  /**
-   * \brief Get the type ID.
-   * \return the object TypeId
-   */
-  //static TypeId GetTypeId (void);
+
+  static TypeId GetTypeId (void);
 
   SourceIpAddress ();
   virtual ~SourceIpAddress ();
@@ -31,17 +33,6 @@ public:
   //static const int PF_NO_MATCH = -1;
 
   virtual bool Match (Ptr<Packet> packet) const = 0;
-
-  /**
-   * \brief Classify a packet.
-   *
-   * \param item the packet to classify.
-   *
-   * \return -1 if this filter is not able to classify packets of the same protocol
-   * as item or the item does not match the filter conditions, the configured return
-   * value otherwise.
-   */
-  //int32_t Classify (Ptr<QueueDiscItem> item) const;
 
 
 private:
