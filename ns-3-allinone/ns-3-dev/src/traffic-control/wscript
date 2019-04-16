@@ -21,6 +21,10 @@ def build(bld):
       'model/prio-queue-disc.cc',
       'model/mq-queue-disc.cc',
       'model/tbf-queue-disc.cc',
+      'model/spq.cc',
+      'model/DiffServ.cc',
+      'model/TrafficClass.cc',
+      'model/source-ip-address.cc',
       'helper/traffic-control-helper.cc',
       'helper/queue-disc-container.cc'
         ]
@@ -53,6 +57,11 @@ def build(bld):
       'model/prio-queue-disc.h',
       'model/mq-queue-disc.h',
       'model/tbf-queue-disc.h',
+      'model/spq.h',
+      'model/DiffServ.h',
+      'model/TrafficClass.h',
+      'model/Filter.h',
+      'model/FilterElement.h',
       'helper/traffic-control-helper.h',
       'helper/queue-disc-container.h'
         ]

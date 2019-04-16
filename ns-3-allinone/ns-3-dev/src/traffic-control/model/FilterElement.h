@@ -16,8 +16,8 @@ public:
 
 //static TypeId GetTypeId (void);
 
-  FilterElement ();
-  virtual ~FilterElement ();
+ // FilterElement ();
+  //virtual ~FilterElement ();
   
 
   virtual bool Match (Ptr<Packet> packet) const = 0;

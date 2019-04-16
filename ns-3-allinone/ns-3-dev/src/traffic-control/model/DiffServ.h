@@ -7,12 +7,12 @@
 #ifndef DIFFSERV_H
 #define DIFFSERV_H
 
-
+#include "ns3/log.h"
 #include <queue>
 #include "ns3/packet.h"
 #include "ns3/queue.h"
 #include "TrafficClass.h"
-
+#include <vector>
 
 namespace ns3 {
 
@@ -38,11 +38,11 @@ public:
 private: 
 
   QueueMode m_mode; 
-  vector<TrafficClass*> q_class;  
+  std::vector<TrafficClass> q_class;   
 
   virtual bool DoEnqueue (Ptr<ns3::Packet> p);
   virtual Ptr<ns3::Packet> DoDequeue (void);
-  virtual Ptr<ns3::Packet> DoRemove (void);
+  //virtual Ptr<ns3::Packet> DoRemove (void);
   virtual Ptr<const ns3::Packet> DoPeek (void) const;
   
   

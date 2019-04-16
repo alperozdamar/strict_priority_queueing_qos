@@ -8,10 +8,10 @@
 #include "ns3/ppp-header.h"
 #include "ns3/pointer.h"
 #include "queue-disc.h"
-#include "filterElement.h" 
+#include "FilterElement.h" 
+#include "ns3/ipv4-address.h"
 
 namespace ns3 {
-
 
 /**
  * \ingroup traffic-control

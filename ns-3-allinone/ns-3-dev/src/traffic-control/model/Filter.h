@@ -8,7 +8,7 @@
 #include "ns3/ppp-header.h"
 #include "ns3/pointer.h"
 #include "queue-disc.h"
-#include "filterElement.h"
+#include "FilterElement.h"
 
 namespace ns3 {
 

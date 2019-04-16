@@ -1,7 +1,9 @@
 #include "ns3/log.h"
 #include "ns3/enum.h"
 #include "ns3/uinteger.h"
-#include "diffServ.h"
+#include "DiffServ.h"
+#include "TrafficClass.h"
+#include <vector>
 
 
 namespace ns3 {
@@ -9,9 +11,9 @@ namespace ns3 {
 NS_LOG_COMPONENT_DEFINE ("DiffServ");
 NS_OBJECT_ENSURE_REGISTERED (DiffServ);
 
-// TypeId DiffServ::GetTypeId (void) 
-// {
-//     static TypeId tid = TypeId ("ns3::DiffServ");
+ TypeId DiffServ::GetTypeId (void) 
+ {
+     static TypeId tid = TypeId ("ns3::DiffServ");
 //     SetParent<Queue> ()
 //         .SetGroupName("Network")
 //         .AddConstructor<DiffServ> ()
@@ -26,51 +28,52 @@ NS_OBJECT_ENSURE_REGISTERED (DiffServ);
 //                         MakeUintegerAccessor (&DiffServ::m_maxBytes), MakeUintegerChecker<uint32_t> ())
 //     ;
 
-//     return tid;
-// }
+     return tid;
+        
+ }
 
 DiffServ::DiffServ () :
     Queue (),
     m_packets (),
     m_bytesInQueue (0)
 {
-    NS_LOG_FUNCTION (this);
+    //NS_LOG_FUNCTION (this);
 }
 
 DiffServ::~DiffServ ()
 {
-    NS_LOG_FUNCTION (this);
+   // NS_LOG_FUNCTION (this);
 }
 
 void
 DiffServ::SetMode (DiffServ::QueueMode mode)
 {
-    NS_LOG_FUNCTION (this << mode);
+    //NS_LOG_FUNCTION (this << mode);
     m_mode = mode;
 }
  
 DiffServ::QueueMode
 DiffServ::GetMode (void) const
 {
-    NS_LOG_FUNCTION (this);
+    //NS_LOG_FUNCTION (this);
     return m_mode;
 }
 
 bool 
 DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
 {
-    NS_LOG_FUNCTION (this << p);
+    //NS_LOG_FUNCTION (this << p);
 
     if (m_mode == QUEUE_MODE_PACKETS && (m_packets.size () >= m_maxPackets))
     {
-        NS_LOG_LOGIC ("Queue full (at max packets) -- droppping pkt");
+       // NS_LOG_LOGIC ("Queue full (at max packets) -- droppping pkt");
         DropBeforeEnqueue (p);
         return false;
     }   
 
     if (m_mode == QUEUE_MODE_BYTES && (m_bytesInQueue + p->GetSize () >= m_maxBytes))
     {
-        NS_LOG_LOGIC ("Queue full (packet would exceed max bytes) -- droppping pkt");
+       // NS_LOG_LOGIC ("Queue full (packet would exceed max bytes) -- droppping pkt");
         DropBeforeEnqueue (p);
         return false;
     }
@@ -78,8 +81,8 @@ DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
     m_bytesInQueue += p->GetSize ();
     m_packets.push (p);
 
-    NS_LOG_LOGIC ("Number packets " << m_packets.size ());
-    NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
+  //  NS_LOG_LOGIC ("Number packets " << m_packets.size ());
+  //  NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
 
     return true;
 }
@@ -87,11 +90,11 @@ DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
 Ptr<ns3::Packet>
 DiffServ::DoDequeue (void)
 {
-    NS_LOG_FUNCTION (this);
+    //NS_LOG_FUNCTION (this);
 
     if (m_packets.empty ())
     {
-        NS_LOG_LOGIC ("Queue empty");
+       // NS_LOG_LOGIC ("Queue empty");
         return 0;
     }
 
@@ -99,10 +102,10 @@ DiffServ::DoDequeue (void)
     m_packets.pop ();
     m_bytesInQueue -= p->GetSize ();
 
-    NS_LOG_LOGIC ("Popped " << p);
+    //NS_LOG_LOGIC ("Popped " << p);
 
-    NS_LOG_LOGIC ("Number packets " << m_packets.size ());
-    NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
+  //  NS_LOG_LOGIC ("Number packets " << m_packets.size ());
+  //  NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
 
     return p;
  }
@@ -110,22 +113,23 @@ DiffServ::DoDequeue (void)
 Ptr<const ns3::Packet>
 DiffServ::DoPeek (void) const
 {
-    NS_LOG_FUNCTION (this);
+   // NS_LOG_FUNCTION (this);
 
     if (m_packets.empty ())
     {
-        NS_LOG_LOGIC ("Queue empty");
+       // NS_LOG_LOGIC ("Queue empty");
         return 0;
     }
     Ptr<Packet> p = m_packets.front ();
 
-    NS_LOG_LOGIC ("Number packets " << m_packets.size ());
-    NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
+  //  NS_LOG_LOGIC ("Number packets " << m_packets.size ());
+  //  NS_LOG_LOGIC ("Number bytes " << m_bytesInQueue);
 
     return p;
 }
 
-uint32_t
+/**
+ * uint32_t
 DiffServ::Classify (Ptr<ns3::Packet> p) 
 {
     NS_LOG_FUNCTION (this);
@@ -133,12 +137,13 @@ DiffServ::Classify (Ptr<ns3::Packet> p)
     uint32_t flow;
     q_class.priority_level = 0;
 
-    if (match(p))
-    {
-        q_class.priority_level = 1;
-    } else{
-        q_class.priority_level = 2;
-    }
+     bool result=false;
+     //TODO: Change to assign priority!
+     for(i=q_class.size-1;i=>0;i--){
+        if(q_class[i].Match(p)){
+            q_class.priority_level = i;
+        }
+     }
 
     return q_class.priority_level;
 }
@@ -151,5 +156,8 @@ DiffServ::Schedule (q_class)
     //TODO
     return DoPeek();
 }
+
+*/
+
 } // namespace ns3
   

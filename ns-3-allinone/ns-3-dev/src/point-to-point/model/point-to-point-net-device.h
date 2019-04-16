@@ -62,6 +62,7 @@ class ErrorModel;
 class PointToPointNetDevice : public NetDevice
 {
 public:
+
   /**
    * \brief Get the TypeId
    *
@@ -190,6 +191,11 @@ public:
   virtual void SetPromiscReceiveCallback (PromiscReceiveCallback cb);
   virtual bool SupportsSendFrom (void) const;
 
+  bool enqueueQosFlag = false;
+  bool dequeueQosFlag = false;
+  virtual void SetEnqueueQosFlag (bool qosFlag);
+  virtual void SetDequeuQosFlag (bool qosFlag);
+
 protected:
   /**
    * \brief Handler for MPI receive event
@@ -224,7 +230,7 @@ private:
    */
   virtual void DoDispose (void);
 
-private:
+private:  
 
   /**
    * \returns the address of the remote device connected to this device

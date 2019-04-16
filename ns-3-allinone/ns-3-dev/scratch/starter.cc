@@ -9,6 +9,8 @@
 #include <iomanip> 
 #include <chrono> 
 #include "ns3/udp-client.h"
+#include "ns3/spq.h"
+
 
 using namespace ns3;
 using namespace std::chrono;
@@ -75,11 +77,11 @@ bool readConfigurationFile(){
 int main (int argc, char *argv[])
 {
   /* Read command line argument  */    
-  uint32_t MaxPacketCount=6000;
+  uint32_t MAX_PACKET_COUNT=1;
   CommandLine cmd;
   cmd.AddValue("CompressionDataRate", "CompressionDataRate [Mbps]", dataRate);    
   cmd.AddValue("configFileName", "configFileName", CONFIG_FILE);    
-  cmd.AddValue("MaxPacketCount", "MaxPacketCount", MaxPacketCount); 
+  cmd.AddValue("MaxPacketCount", "MaxPacketCount", MAX_PACKET_COUNT); 
   cmd.Parse (argc, argv);
   NS_LOG_UNCOND("**********Command Line Configuration Parameters**************");  
   NS_LOG_UNCOND("*************************************************************");    
@@ -117,6 +119,24 @@ int main (int argc, char *argv[])
   NetDeviceContainer deviceSenderToRouter; 
   deviceSenderToRouter = P2PSenderToRouter.Install(nodes.Get(0),nodes.Get(1));
 
+  /***
+   * 
+   * DEFINE SPQ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   *    
+   * */
+   SPQ spq = new SPQ(); 
+     
+  for(size_t i = 1; i <= numberOfQueue; i++)
+  {       
+   spq.q_class[i]=new TrafficClass();    
+  }  
+
+  Ptr <PointToPointNetDevice> PpNdSenderToRouter = DynamicCast<PointToPointNetDevice> (deviceSenderToRouter.Get(1));
+  PpNdSenderToRouter -> SetEnqueueQosFlag(true);  
+  PpNdSenderToRouter ->SetQueue(spq);
+  PpNdSenderToRouter -> SetQueue(spq.q_class[0]);
+  
+
   Ipv4AddressHelper ipv4Address;
   /* Assign IP to SenderRouter */  
   ipv4Address.SetBase ("10.0.1.0", "255.255.255.0");
@@ -136,6 +156,11 @@ int main (int argc, char *argv[])
   NetDeviceContainer deviceRouterToReceiver; 
   deviceRouterToReceiver = P2PRouterToReceiver.Install(nodes.Get(1),nodes.Get(2));  
  
+  //TODO:....Check!
+  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
+  PpNdRouterToServer -> SetDequeuQosFlag(true); 
+  PpNdRouterToServer ->SetQueue(spq);
+
   /* Assign IP to Router2Receiver */
   ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");
   Ipv4InterfaceContainer interfaceRouterToReceiver;
@@ -153,7 +178,8 @@ int main (int argc, char *argv[])
 
   UdpClientHelper clientHigh (serverAddress, serverPort);
   clientHigh.SetAttribute ("Interval", TimeValue (interPacketInterval));   
-  clientHigh.SetAttribute ("PacketSize", UintegerValue (PACKET_SIZE));       
+  clientHigh.SetAttribute ("MaxPackets", UintegerValue (MAX_PACKET_COUNT)); 
+  clientHigh.SetAttribute ("PacketSize", UintegerValue (PACKET_SIZE));   
   ApplicationContainer clientAppsHigh = clientHigh.Install (nodes.Get(0));
   Ptr<UdpClient> UdpClientHigh = DynamicCast<UdpClient>(clientAppsHigh.Get(0));
   
