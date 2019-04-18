@@ -124,17 +124,17 @@ int main (int argc, char *argv[])
    * DEFINE SPQ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    *    
    * */
-   SPQ spq = new SPQ(); 
+  //SPQ spq = new SPQ(); 
      
-  for(size_t i = 1; i <= numberOfQueue; i++)
-  {       
-   spq.q_class[i]=new TrafficClass();    
-  }  
+  //for(size_t i = 1; i <= numberOfQueue; i++)
+  //{       
+  // spq.q_class[i]=new TrafficClass();    
+  //}  
 
   Ptr <PointToPointNetDevice> PpNdSenderToRouter = DynamicCast<PointToPointNetDevice> (deviceSenderToRouter.Get(1));
   PpNdSenderToRouter -> SetEnqueueQosFlag(true);  
-  PpNdSenderToRouter ->SetQueue(spq);
-  PpNdSenderToRouter -> SetQueue(spq.q_class[0]);
+ // PpNdSenderToRouter ->SetQueue(spq);
+  //PpNdSenderToRouter -> SetQueue(spq.q_class[0]);
   
 
   Ipv4AddressHelper ipv4Address;
@@ -159,7 +159,7 @@ int main (int argc, char *argv[])
   //TODO:....Check!
   Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
   PpNdRouterToServer -> SetDequeuQosFlag(true); 
-  PpNdRouterToServer ->SetQueue(spq);
+  //PpNdRouterToServer ->SetQueue(spq);
 
   /* Assign IP to Router2Receiver */
   ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");
