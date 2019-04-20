@@ -1,12 +1,10 @@
 
 #include "ns3/log.h"
-#include "source-ip-address.h"
-#include "ns3/ipv4-header.h"
-#include "ns3/point-to-point-net-device.h"
+#include "protocol-number.h"
 
-//#include "ns3/point-to-point-channel.h"
-//#include "ns3/pointer.h"
-//#include "ns3/ppp-header.h"
+// #include "ns3/ipv4-header.h"
+// #include "ns3/point-to-point-net-device.h"
+// #include "ns3/log.h"
 // #include "ns3/integer.h"
 // #include "ns3/ppp-header.h"
 // #include "ns3/pointer.h"
@@ -27,27 +25,26 @@
 // #include "ns3/uinteger.h"
 // #include "ns3/pointer.h"
 // #include "ns3/lr-wpan-net-device.h" 
-// #include "ns3/point-to-point-net-device.h"
-// #include "ns3/point-to-point-channel.h"
-// #include "ns3/ppp-header.h" 
+// #include "point-to-point-net-device.h"
+// #include "point-to-point-channel.h"
+// #include "ppp-header.h" 
 // #include "ns3/udp-header.h"
 // #include "ns3/ipv4-header.h" 
-// #include "source-ip-address.h"
-// #include "ns3/ipv4-address.h"
+// #include "protocolNumber.h"
 // #include "stdio.h"
 // #include <iostream>
 
 namespace ns3 {
 
-    NS_LOG_COMPONENT_DEFINE ("SourceIpAddress");
+    NS_LOG_COMPONENT_DEFINE ("ProtocolNumber");
 
 
-    NS_OBJECT_ENSURE_REGISTERED (SourceIpAddress);
+    NS_OBJECT_ENSURE_REGISTERED (ProtocolNumber);
 
     TypeId 
-    SourceIpAddress::GetTypeId (void)
+    ProtocolNumber::GetTypeId (void)
     {
-    static TypeId tid = TypeId ("ns3::SourceIpAddress")
+    static TypeId tid = TypeId ("ns3::ProtocolNumber")
         .SetParent<Object> ()
         .SetGroupName ("TrafficControl")
     ;
@@ -55,19 +52,20 @@ namespace ns3 {
     }
 
 
-    SourceIpAddress::SourceIpAddress ()
+    ProtocolNumber::ProtocolNumber ()
     {
     NS_LOG_FUNCTION (this);
     }
 
-    SourceIpAddress::~SourceIpAddress()
+    ProtocolNumber::~ProtocolNumber()
     {
     NS_LOG_FUNCTION (this); 
+
     }
 
     
     bool
-    SourceIpAddress::Match (Ptr<Packet> packet) 
+    ProtocolNumber::match (Ptr<Packet> packet)
     {
     NS_LOG_FUNCTION (this << packet);
     
@@ -76,14 +74,13 @@ namespace ns3 {
     packet->PeekHeader(ipv4Header);
 
     
-    Ipv4Address Ipv4Address =ipv4Header.GetSource();
-
+    uint8_t protocolNumber = ipv4Header.GetProtocol();
     
-    if(Ipv4Address.IsEqual(value)){
-        std::cout<<" Matched Ipv4Address:" << Ipv4Address <<std::endl;
+    if(protocolNumber==value ){
+        std::cout<<" Matched protocolNumber:" << protocolNumber <<std::endl;
         return true;
     }  else{
-        std::cout<<" Not Matched Ipv4Address:" << Ipv4Address <<std::endl;
+        std::cout<<" Not Matched protocolNumber:" << protocolNumber <<std::endl;
         return false;
 
     } 

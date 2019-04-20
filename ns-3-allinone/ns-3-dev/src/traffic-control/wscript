@@ -26,6 +26,7 @@ def build(bld):
       'model/diff-serv.cc',
       'model/traffic-class.cc',
       'model/source-ip-address.cc',
+      'model/protocol-number.cc',
       'helper/traffic-control-helper.cc',
       'helper/queue-disc-container.cc'
         ]
@@ -63,6 +64,7 @@ def build(bld):
       'model/traffic-class.h',
       'model/filter.h',
       'model/filter-element.h',
+      'model/protocol-number.h',
       'helper/traffic-control-helper.h',
       'helper/queue-disc-container.h'
         ]

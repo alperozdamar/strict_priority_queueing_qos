@@ -3,12 +3,16 @@
 #define TRAFFIC_CLASS_H
 
 #include "ns3/log.h"
-#include "ns3/integer.h"
-#include "ns3/ppp-header.h"
-#include "ns3/pointer.h"
-#include "queue-disc.h"
-#include "ns3/queue.h" 
 #include "filter.h"
+#include "ns3/point-to-point-net-device.h"
+#include "ns3/queue.h"
+
+// #include "ns3/integer.h"
+// #include "ns3/ppp-header.h"
+// #include "ns3/pointer.h"
+// #include "queue-disc.h"
+// #include "ns3/queue.h" 
+
 
 
 namespace ns3 {
