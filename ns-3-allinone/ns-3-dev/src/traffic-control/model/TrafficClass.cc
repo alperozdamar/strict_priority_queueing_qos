@@ -61,7 +61,7 @@ namespace ns3 {
 
     //for each filter in vector of filter call match on each filter 
     // even if one match -- return true    
-    bool TrafficClass::Match(Ptr<Packet> packet) 
+    bool TrafficClass::match(Ptr<Packet> packet)
     {
       NS_LOG_FUNCTION (this << packet);
       
@@ -70,7 +70,7 @@ namespace ns3 {
       for(;iter!=filters.end();iter++){
           std::cout<<*iter<<" "; 
 
-          if ((**iter).Match(packet)){
+          if ((**iter).match(packet)){
 
               return true; 
           }                   

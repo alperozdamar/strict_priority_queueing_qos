@@ -25,7 +25,7 @@ public:
   std::vector<Filter*> filters;  
   bool Enqueue (Ptr<ns3::Packet> packet);
   Ptr<ns3::Packet> Dequeue();
-  bool Match (Ptr<ns3::Packet> packet); 
+  bool match (Ptr<ns3::Packet> packet); 
   Ptr<ns3::Packet>Remove(void);
   Ptr<ns3::Packet>Peek(void);
 

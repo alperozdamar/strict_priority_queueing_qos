@@ -20,7 +20,7 @@ public:
   //virtual ~FilterElement ();
   
 
-  virtual bool Match (Ptr<Packet> packet) const = 0;
+  virtual bool match (Ptr<Packet> packet) const = 0;
 
 
 };

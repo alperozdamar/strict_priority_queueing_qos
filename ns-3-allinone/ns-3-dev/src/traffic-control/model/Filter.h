@@ -21,7 +21,7 @@ class Filter: public Object {
 
   //static TypeId GetTypeId (void);
   std::vector<ns3::FilterElement*> elements; //TODO check for ns3::FilterElement*
-  bool Match (Ptr<ns3::Packet> packet);  
+  bool match (Ptr<ns3::Packet> packet);  
 
 };
 

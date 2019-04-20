@@ -47,7 +47,7 @@ DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
     auto iter = q_class.begin();
       for(;iter!=q_class.end();iter++){ 
          // std::cout<<*iter<<" ";    
-            if((**iter).Match(p)){
+            if((**iter).match(p)){
                 return (**iter).Enqueue(p);
             }else{
 
@@ -96,16 +96,17 @@ Ptr<ns3::Packet> DiffServ::DoRemove (void)
 }
 
 
- uint32_t
+uint32_t
 DiffServ::Classify (Ptr<ns3::Packet> p) 
 {
-    //NS_LOG_FUNCTION (this);
 
-    if(DoEnqueue(p)){
-        return 1;
-    }else{
-        return 0;
-    }  
+    //NS_LOG_FUNCTION (this)
+
+   if(DoEnqueue(p)){
+       return 1;
+   }else{
+       return 0;
+   }
 }
 
 Ptr<ns3::Packet> 

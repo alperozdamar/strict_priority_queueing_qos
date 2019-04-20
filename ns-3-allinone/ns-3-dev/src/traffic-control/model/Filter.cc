@@ -41,11 +41,11 @@ namespace ns3 {
       NS_LOG_FUNCTION (this); 
     }
 
-    bool Filter::Match (Ptr<ns3::Packet> packet){
+    bool Filter::match (Ptr<ns3::Packet> packet){
       auto iter = elements.begin();     
       for(;iter!=elements.end();iter++){
           std::cout<<*iter<<" "; 
-          if ((**iter).Match(packet)==false){              
+          if ((**iter).match(packet)==false){              
               return false;
           }                             
       }
