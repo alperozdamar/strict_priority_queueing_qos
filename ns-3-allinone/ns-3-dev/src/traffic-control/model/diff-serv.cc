@@ -1,8 +1,8 @@
 #include "ns3/log.h"
 #include "ns3/enum.h"
 #include "ns3/uinteger.h"
-#include "DiffServ.h"
-#include "TrafficClass.h"
+#include "diff-serv.h"
+#include "traffic-class.h"
 #include <vector>
 #include "stdio.h"
 #include <iostream>

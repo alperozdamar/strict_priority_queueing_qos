@@ -20,7 +20,7 @@
 #define SPQ_H
 
 #include "ns3/object.h"
-#include "ns3/DiffServ.h" 
+#include "diff-serv.h" 
 
 namespace ns3 {
 

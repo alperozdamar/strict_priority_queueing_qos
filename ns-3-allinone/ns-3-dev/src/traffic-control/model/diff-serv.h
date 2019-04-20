@@ -11,7 +11,7 @@
 #include <queue>
 #include "ns3/packet.h"
 #include "ns3/queue.h"
-#include "TrafficClass.h"
+#include "traffic-class.h"
 #include <vector>
 
 namespace ns3 {

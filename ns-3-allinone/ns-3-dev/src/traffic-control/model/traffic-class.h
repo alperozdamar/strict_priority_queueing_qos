@@ -8,7 +8,7 @@
 #include "ns3/pointer.h"
 #include "queue-disc.h"
 #include "ns3/queue.h" 
-#include "Filter.h"
+#include "filter.h"
 
 
 namespace ns3 {

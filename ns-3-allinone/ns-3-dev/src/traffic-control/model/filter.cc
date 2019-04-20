@@ -22,7 +22,7 @@
 #include "ns3/ppp-header.h" 
 #include "ns3/udp-header.h"
 #include "ns3/ipv4-header.h" 
-#include "TrafficClass.h"
+#include "traffic-class.h"
 #include "stdio.h"
 #include <iostream>
 #include "ns3/drop-tail-queue.h"
