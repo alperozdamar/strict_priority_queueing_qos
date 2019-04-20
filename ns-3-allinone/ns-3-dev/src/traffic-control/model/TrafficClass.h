@@ -10,6 +10,7 @@
 #include "ns3/queue.h" 
 #include "Filter.h"
 
+
 namespace ns3 {
 
 
@@ -25,16 +26,17 @@ public:
   bool Enqueue (Ptr<ns3::Packet> packet);
   Ptr<ns3::Packet> Dequeue();
   bool Match (Ptr<ns3::Packet> packet); 
-
+  Ptr<ns3::Packet>Remove(void);
+  Ptr<ns3::Packet>Peek(void);
 
 private:
   uint32_t bytes;
-  uint32_t packets;
-  uint32_t maxPackets;
-  uint32_t maxBytes;
-  double_t weight;
-  uint32_t priority_level;
-  bool isDefault;
+  uint32_t packets;       //related SPQ
+  uint32_t maxPackets;    //related SPQ
+  uint32_t maxBytes;      //related DDR
+  double_t weight;        //related DDR
+  uint32_t priority_level;  
+  bool isDefault;        //only one traffic class should have isDefault value=1
   Ptr<ns3::Queue<ns3::Packet>> m_queue;  
 };
   //PacketFilter

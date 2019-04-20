@@ -22,6 +22,7 @@ def build(bld):
       'model/mq-queue-disc.cc',
       'model/tbf-queue-disc.cc',
       'model/spq.cc',
+      'model/Filter.cc',
       'model/DiffServ.cc',
       'model/TrafficClass.cc',
       'model/source-ip-address.cc',

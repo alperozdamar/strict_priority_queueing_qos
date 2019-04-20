@@ -33,24 +33,23 @@ public:
   uint32_t Classify (Ptr<ns3::Packet> p);
 
   //TODO : Remove if not needed
-  static TypeId GetTypeId (void); 
+  //static TypeId GetTypeId (void); 
 
 private: 
 
   QueueMode m_mode; 
-  std::vector<TrafficClass> q_class;   
+  std::vector<TrafficClass*> q_class;   
 
-  virtual bool DoEnqueue (Ptr<ns3::Packet> p);
-  virtual Ptr<ns3::Packet> DoDequeue (void);
-  //virtual Ptr<ns3::Packet> DoRemove (void);
-  virtual Ptr<const ns3::Packet> DoPeek (void) const;
-  
-  
+  bool DoEnqueue (Ptr<ns3::Packet> p);
+  Ptr<ns3::Packet> DoDequeue (void);
+  Ptr<ns3::Packet> DoRemove (void);
+  Ptr<const ns3::Packet> DoPeek (void) const;
+    
   //TODO : Remove if not needed
-  std::queue<Ptr<ns3::Packet>> m_packets; 
-  uint32_t m_maxPackets;              
-  uint32_t m_maxBytes;                
-  uint32_t m_bytesInQueue;  
+  //std::queue<Ptr<ns3::Packet>> m_packets; 
+  //uint32_t m_maxPackets;              
+  //uint32_t m_maxBytes;                
+  //uint32_t m_bytesInQueue;  
 
 }; 
 } // namespace ns3

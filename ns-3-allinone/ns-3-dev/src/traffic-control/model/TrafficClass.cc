@@ -11,7 +11,7 @@
 #include "ns3/pointer.h"
 #include "queue-disc.h"
 #include "ns3/log.h"
-#include "ns3/queue.h"
+//#include "ns3/queue.h"
 #include "ns3/simulator.h"
 #include "ns3/mac48-address.h"
 #include "ns3/llc-snap-header.h"
@@ -28,8 +28,12 @@
 #include "TrafficClass.h"
 #include "stdio.h"
 #include <iostream>
+#include "ns3/drop-tail-queue.h"
+
 
 namespace ns3 {
+
+    
 
     NS_LOG_COMPONENT_DEFINE ("TrafficClass");
     NS_OBJECT_ENSURE_REGISTERED (TrafficClass);
@@ -55,31 +59,51 @@ namespace ns3 {
       NS_LOG_FUNCTION (this); 
     }
 
-    
+    //for each filter in vector of filter call match on each filter 
+    // even if one match -- return true    
     bool TrafficClass::Match(Ptr<Packet> packet) 
     {
       NS_LOG_FUNCTION (this << packet);
-
-      //TODO
-  
-      return true;
-    }
-
-
-    bool TrafficClass::Enqueue (Ptr<Packet> packet){
       
-      
-      m_queue -> Enqueue(packet);
+      auto iter = filters.begin();
 
+      for(;iter!=filters.end();iter++){
+          std::cout<<*iter<<" "; 
 
+          if ((**iter).Match(packet)){
 
+              return true; 
+          }                   
+      }
+      return false;
+    }
 
-      return true;
+    //Enqueue func calls the head of the queue nd then calles enqueue of queue class
+    bool TrafficClass::Enqueue (Ptr<Packet> item){            
+      //m_queue -> Enqueue(packet);     //quue class's enqueue.
+      return Enqueue (item);
+      //return true;
     }
   
-    Ptr<ns3::Packet> Dequeue(){
-      return 0;
-      //TODO
+    Ptr<ns3::Packet> TrafficClass::Dequeue(){    
+        Ptr<Packet> item = Dequeue ();
+        return item ;
+      //return m_queue -> Dequeue();            
     }
+
+
+Ptr<ns3::Packet>
+TrafficClass::Remove (void)
+{  
+  Ptr<ns3::Packet> item = Remove();
+  return item;
+}
+
+Ptr<ns3::Packet>
+TrafficClass::Peek (void) 
+{
+
+  return Peek ();
+}
 
 }// namespace ns3
