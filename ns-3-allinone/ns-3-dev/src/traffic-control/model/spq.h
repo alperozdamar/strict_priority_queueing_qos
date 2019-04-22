@@ -34,7 +34,10 @@ public:
   Ptr<Packet> Schedule ();
 
 private:
-  Initialize_Q_class_Test ();
+
+//Do Not Delete 
+ 
+ // Initialize_Q_class_Test ();
 
   NS_LOG_TEMPLATE_DECLARE;
 };
