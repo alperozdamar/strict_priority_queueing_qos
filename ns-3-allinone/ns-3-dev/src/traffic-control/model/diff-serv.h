@@ -19,19 +19,20 @@ namespace ns3 {
 class TraceContainer;
 template<typename Packet>
 class DiffServ : public Queue<ns3::Packet>{
-public:
+public:  
 
-  enum QueueMode
+enum QueueMode
   {
     QUEUE_MODE_PACKETS,
     QUEUE_MODE_BYTES,
   };
 
+
   DiffServ();
   virtual ~DiffServ();
-  void SetMode (DiffServ::QueueMode mode);
-  DiffServ::QueueMode GetMode (void) const;
-  Ptr<ns3::Packet> Schedule ();
+  void SetMode (DiffServ<Packet>::QueueMode mode);
+  DiffServ<Packet>::QueueMode GetMode (void);
+  Ptr<ns3::Packet> Schedule (void);
   uint32_t Classify (Ptr<ns3::Packet> p);
 
   //TODO : Remove if not needed
@@ -59,8 +60,8 @@ private:
 }; 
 
 template <typename Packet>
-DiffServ<Packet>::DiffServ () :
-    Queue ()    
+DiffServ<Packet>::DiffServ()
+//:Queue ()    
 {
     //NS_LOG_FUNCTION (this);
 }
@@ -72,17 +73,17 @@ DiffServ<Packet>::~DiffServ ()
 }
 
 
-template <typename Packet>
+//template <typename Packet>
 void
-DiffServ<Packet>::SetMode (DiffServ::QueueMode mode)
+DiffServ<Packet>::SetMode (typename DiffServ<Packet>::QueueMode mode)
 {
     //NS_LOG_FUNCTION (this << mode);
     m_mode = mode;
 }
  
 template <typename Packet>
-DiffServ<Packet>::QueueMode
-DiffServ<Packet>::GetMode (void) const
+typename DiffServ<Packet>::QueueMode
+DiffServ<Packet>::GetMode ()    
 {
     //NS_LOG_FUNCTION (this);
     return m_mode;

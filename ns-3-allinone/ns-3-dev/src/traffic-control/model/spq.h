@@ -56,21 +56,27 @@
 
 namespace ns3 {
 
-
 template<typename Packet>
-class SPQ: public DiffServ<packet> {
+class SPQ: public DiffServ<Packet> {
 
 public:
-  
-  
+
+  enum QueueMode
+  {
+    QUEUE_MODE_PACKETS,
+    QUEUE_MODE_BYTES,
+  };
+    
   //QueueMode mode;
   //std::vector<TrafficClass*>) trafficClassVector;
   
   static TypeId GetTypeId (void);
-  SPQ (QueueMode mode, std::vector<TrafficClass*> trafficClassVector){
-    this.mode = mode;
-    this.trafficClassVector = trafficClassVector;
-  };
+
+  SPQ (QueueMode mode, std::vector<TrafficClass*> trafficClassVector); 
+  //  this->m_mode = mode;
+  //  this->q_class = trafficClassVector;
+  
+
   virtual ~SPQ (); 
   bool Enqueue(Ptr<Packet> item);
 
@@ -105,7 +111,7 @@ NS_LOG_TEMPLATE_DECLARE;
     SPQ<Packet> :: SPQ (QueueMode mode, std::vector<TrafficClass*> trafficClassVector):
     NS_LOG_TEMPLATE_DEFINE("SPQ")   
     {
-        this -> m_mode = mode
+        this -> m_mode = mode;
         this -> q_class = trafficClassVector;
         NS_LOG_FUNCTION (this);
     }
@@ -126,10 +132,6 @@ NS_LOG_TEMPLATE_DECLARE;
         // NS_LOG_FUNCTION (this); 
     }
     extern template class SPQ<Packet>;
-
-
-extern template class SPQ<Packet>;
-
 } // namespace ns3
 
 #endif /* SPQ_H */
