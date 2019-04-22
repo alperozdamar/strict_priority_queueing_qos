@@ -161,9 +161,9 @@ int main (int argc, char *argv[])
   PpNdRouterToServer -> SetDequeuQosFlag(true); 
 
 
-  std::vector<TrafficClass*> tcs; 
+  std::vector<TrafficClass*> vectorList; 
   
-  //Ptr<SPQ<Packet>> custom = new SPQ<Packet>(DiffServ::QueueMode::QUEUE_MODE_PACKETS,tcs);
+  Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(DiffServ<Packet>::QueueMode::QUEUE_MODE_PACKETS,vectorList);
 
 
 
