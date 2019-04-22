@@ -41,25 +41,31 @@ public:
 
   uint32_t Classify (Ptr<ns3::Packet> p);
 
-  bool Enqueue (Ptr<Packet> item);
-
-  Ptr<Packet> Dequeue ();
-
-  Ptr<Packet> Remove ();
-
-  Ptr<const Packet> Peek (void) const;
-
 
 
 private: 
 
   QueueMode m_mode; 
-  std::vector<TrafficClass*> q_class;   
+  std::vector<TrafficClass*> q_class; 
 
-  bool DoEnqueue (Ptr<ns3::Packet> p);
-  Ptr<ns3::Packet> DoDequeue ();
-  Ptr<ns3::Packet> DoRemove ();
-  Ptr<const ns3::Packet> DoPeek (void) const;
+  // Came from project spec
+
+    bool DoEnqueue (Ptr<ns3::Packet> p);
+
+    Ptr<ns3::Packet> DoDequeue ();
+
+    Ptr<ns3::Packet> DoRemove ();
+
+    Ptr<const ns3::Packet> DoPeek (void) const;
+
+    // wE MUST define these because inherrited from Queue
+    bool Enqueue (Ptr<Packet> item);
+
+    Ptr<Packet> Dequeue ();
+
+    Ptr<Packet> Remove ();
+
+    Ptr<const Packet> Peek (void) const;
 
    using Queue<Packet>::Head;
    using Queue<Packet>::Tail;

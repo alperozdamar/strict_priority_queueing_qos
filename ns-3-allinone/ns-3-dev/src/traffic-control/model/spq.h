@@ -9,7 +9,7 @@
 namespace ns3 {
 
 template <typename Packet>
-class SPQ : public DiffServ<Packet>
+class SPQ : public DiffServ<Packet> 
 {
 
 public:
@@ -38,6 +38,18 @@ private:
 //Do Not Delete 
  
  // Initialize_Q_class_Test ();
+
+
+   using Queue<Packet>::Head;
+   using Queue<Packet>::Tail;
+   using Queue<Packet>::DoEnqueue;
+   using Queue<Packet>::DoDequeue;
+   using Queue<Packet>::DoRemove;
+   using Queue<Packet>::DoPeek;
+
+
+   using DiffServ<Packet>::Schedule;
+   using DiffServ<Packet>::Classify;
 
   NS_LOG_TEMPLATE_DECLARE;
 };

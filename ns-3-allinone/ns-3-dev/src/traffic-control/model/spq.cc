@@ -12,7 +12,7 @@ TypeId
 SPQ<Packet>::GetTypeId (void)
 {
   static TypeId tid = TypeId (("ns3::SPQ<" + GetTypeParamName<SPQ<Packet>> () + ">").c_str ())
-    .SetParent <DiffServ<Packet> ()
+    .SetParent <DiffServ<Packet>> ()
     .SetGroupName ("trafficClass")
     .template AddConstructor<SPQ<Packet>> () //)//TODO: I may need to add 2 parameters
 ;
@@ -48,7 +48,8 @@ bool
 SPQ<Packet>::Enqueue (Ptr<Packet> item)
 {
   NS_LOG_FUNCTION (this << item);
-  return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
+  //return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
+  return DiffServ<Packet>::Classify(item)
 }
 
 template <typename Packet>
@@ -56,7 +57,8 @@ Ptr<Packet>
 SPQ<Packet>::Dequeue (void)
 {
   NS_LOG_FUNCTION (this);
-  Ptr<Packet> item = DiffServ<Packet>::DoDequeue (Queue<Packet>::Head());
+  //Ptr<Packet> item = DiffServ<Packet>::DoDequeue (Queue<Packet>::Head());
+  Ptr<Packet> item = DiffServ<Packet>::Schedule ();
   NS_LOG_LOGIC("Popped " << item);
   return item;
 }
@@ -66,7 +68,7 @@ Ptr<Packet>
 SPQ<Packet>::Remove (void)
 {
   NS_LOG_FUNCTION (this);
-  Ptr<Packet> item = DiffServ<Packet>::DoRemove (Queue<Packet>::Head());
+  Ptr<Packet> item = Queue<Packet>::DoRemove (Queue<Packet>::Head());
   NS_LOG_LOGIC("Removed " << item);
   return item;
 }
@@ -77,7 +79,7 @@ SPQ<Packet>::Peek (void) const
 {
   NS_LOG_FUNCTION (this);
 
-  return DoPeek(Head());
+  return Queue<Packet>::DoPeek(Queue<Packet>::Head());
 }
 
 template <typename Packet>
@@ -95,7 +97,7 @@ SPQ<Packet>::Schedule ()
 {
   NS_LOG_FUNCTION (this);
 
-  return DiffServ::Schedule()
+  return DiffServ<Packet>::Schedule()
 }
 
 
@@ -113,11 +115,15 @@ SPQ<Packet>::Schedule ()
 //   NS_LOG_FUNCTION (this);
 // }
 
-template <typename Packet>
-SPQ<Packet>::~SPQ ()
-{
-  NS_LOG_FUNCTION (this);
-}
+
+
+
+
+
+
+
+
+
 
 
 } // namespace ns3

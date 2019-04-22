@@ -163,11 +163,11 @@ int main (int argc, char *argv[])
 
   std::vector<TrafficClass*> vectorList; 
   
-  Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(DiffServ<Packet>::QueueMode::QUEUE_MODE_PACKETS,vectorList);
+  Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
 
 
 
-  //PpNdRouterToServer ->SetQueue(spq);
+  PpNdRouterToServer -> SetQueue(spqInstance);
 
   /* Assign IP to Router2Receiver */
   ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");

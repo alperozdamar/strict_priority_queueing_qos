@@ -137,7 +137,8 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule () 
 {
     NS_LOG_FUNCTION (this);
-    return DoDequeue();
+    Ptr<Packet> item = DoDequeue (Head());
+    return item;
 }
 
 
@@ -156,7 +157,7 @@ DiffServ<Packet>::Enqueue (Ptr<Packet> item)
  {
    NS_LOG_FUNCTION (this);
  
-   Ptr<Item> item = DoDequeue (Head ());
+   Ptr<Packet> item = DoDequeue (Head ());
  
    NS_LOG_LOGIC ("Popped " << item);
  
@@ -169,7 +170,7 @@ DiffServ<Packet>::Enqueue (Ptr<Packet> item)
  {
    NS_LOG_FUNCTION (this);
  
-   Ptr<Item> item = DoRemove (Head ());
+   Ptr<Packet> item = DoRemove (Head ());
  
    NS_LOG_LOGIC ("Removed " << item);
  
