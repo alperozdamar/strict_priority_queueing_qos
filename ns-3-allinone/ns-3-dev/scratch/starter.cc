@@ -159,7 +159,15 @@ int main (int argc, char *argv[])
   //TODO:....Check!
   Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
   PpNdRouterToServer -> SetDequeuQosFlag(true); 
-  //PpNdRouterToServer ->SetQueue(spq);
+
+
+  std::vector<TrafficClass*> vectorList; 
+  
+  Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
+
+
+
+  PpNdRouterToServer -> SetQueue(spqInstance);
 
   /* Assign IP to Router2Receiver */
   ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");

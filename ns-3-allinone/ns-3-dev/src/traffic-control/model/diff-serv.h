@@ -16,42 +16,70 @@
 
 namespace ns3 {
 
-class TraceContainer;
-class DiffServ : public Queue<ns3::Packet>{
-public:
-
-  enum QueueMode
+enum QueueMode
   {
     QUEUE_MODE_PACKETS,
     QUEUE_MODE_BYTES,
   };
+
+class TraceContainer;
+template<typename Packet>
+class DiffServ : public Queue<ns3::Packet>{
+public: 
+
+  static TypeId GetTypeId (void);  
+
   DiffServ();
+
   virtual ~DiffServ();
-  void SetMode (DiffServ::QueueMode mode);
-  DiffServ::QueueMode GetMode (void) const;
-  Ptr<ns3::Packet> Schedule ();
+
+  void SetMode (QueueMode mode);
+
+  QueueMode GetMode (void);
+
+  Ptr<ns3::Packet> Schedule (void);
+
   uint32_t Classify (Ptr<ns3::Packet> p);
 
-  //TODO : Remove if not needed
-  //static TypeId GetTypeId (void); 
+    // wE MUST define these because inherrited from Queue
+    bool Enqueue (Ptr<Packet> item);
+
+    Ptr<Packet> Dequeue ();
+
+    Ptr<Packet> Remove ();
+
+    Ptr<const Packet> Peek (void) const;
+
+
 
 private: 
 
   QueueMode m_mode; 
-  std::vector<TrafficClass*> q_class;   
+  std::vector<TrafficClass*> q_class; 
 
-  bool DoEnqueue (Ptr<ns3::Packet> p);
-  Ptr<ns3::Packet> DoDequeue (void);
-  Ptr<ns3::Packet> DoRemove (void);
-  Ptr<const ns3::Packet> DoPeek (void) const;
-    
-  //TODO : Remove if not needed
-  //std::queue<Ptr<ns3::Packet>> m_packets; 
-  //uint32_t m_maxPackets;              
-  //uint32_t m_maxBytes;                
-  //uint32_t m_bytesInQueue;  
+  // Came from project spec
 
+    bool DoEnqueue (Ptr<ns3::Packet> p);
+
+    Ptr<ns3::Packet> DoDequeue ();
+
+    Ptr<ns3::Packet> DoRemove ();
+
+    Ptr<const ns3::Packet> DoPeek (void) const;
+
+
+
+   using Queue<Packet>::Head;
+   using Queue<Packet>::Tail;
+   using Queue<Packet>::DoEnqueue;
+   using Queue<Packet>::DoDequeue;
+   using Queue<Packet>::DoRemove;
+   using Queue<Packet>::DoPeek;
+
+  NS_LOG_TEMPLATE_DECLARE;
 }; 
+
+extern template class DiffServ<Packet>;
 } // namespace ns3
 
 #endif /* DIFFSERV_H */

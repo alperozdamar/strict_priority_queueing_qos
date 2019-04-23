@@ -10,39 +10,58 @@
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("DiffServ");
-NS_OBJECT_ENSURE_REGISTERED (DiffServ);
+NS_OBJECT_TEMPLATE_CLASS_DEFINE (DiffServ,Packet);
 
-DiffServ::DiffServ () :
-    Queue ()    
+
+template <typename Packet>
+TypeId
+DiffServ<Packet>::GetTypeId (void)
 {
-    //NS_LOG_FUNCTION (this);
+  static TypeId tid = TypeId (("ns3::DiffServ<" + GetTypeParamName<DiffServ<Packet>> () + ">").c_str ())
+    .SetParent <Queue<Packet> >()
+    .SetGroupName ("trafficClass")
+    .template AddConstructor<DiffServ<Packet>> () 
+;
+  return tid;
 }
 
-DiffServ::~DiffServ ()
+template <typename Packet>
+DiffServ<Packet>::DiffServ():
+Queue<Packet>(), 
+NS_LOG_TEMPLATE_DEFINE("DiffServ")  
 {
-   // NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION (this);
 }
 
+template <typename Packet>
+DiffServ<Packet>::~DiffServ ()
+{
+   NS_LOG_FUNCTION (this);
+}
+
+
+template <typename Packet>
 void
-DiffServ::SetMode (DiffServ::QueueMode mode)
+DiffServ<Packet>::SetMode (QueueMode mode)
 {
-    //NS_LOG_FUNCTION (this << mode);
-    m_mode = mode;
+    NS_LOG_FUNCTION (this << mode);
+    this ->  m_mode = mode;
 }
- 
-DiffServ::QueueMode
-DiffServ::GetMode (void) const
+
+template <typename Packet>
+QueueMode
+DiffServ<Packet>::GetMode ()    
 {
-    //NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION (this);
     return m_mode;
 }
 
 
-//We should call TRaffic Class's Enqueu???
-bool 
-DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
+template <typename Packet>
+bool
+DiffServ<Packet>::DoEnqueue (Ptr<ns3::Packet> p)
 {
-    //NS_LOG_FUNCTION (this << p);
+    NS_LOG_FUNCTION (this << p);
 
     auto iter = q_class.begin();
       for(;iter!=q_class.end();iter++){ 
@@ -55,23 +74,25 @@ DiffServ::DoEnqueue (Ptr<ns3::Packet> p)
     }       
     return false;
 }
-
+ 
+template <typename Packet>
 Ptr<ns3::Packet>
-DiffServ::DoDequeue (void)
+DiffServ<Packet>::DoDequeue (void)
 {
-    //NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION (this);
     auto iter = q_class.begin();
-    for(;iter!=q_class.end();iter++){                      
-        //undefined reference to `ns3::TrafficClass::Dequeue()'         
+    for(;iter!=q_class.end();iter++){                              
         return (**iter).Dequeue();   
     }    
     return 0;     
  }
 
+ 
+template <typename Packet>
 Ptr<const ns3::Packet>
-DiffServ::DoPeek (void) const
+DiffServ<Packet>::DoPeek () const
 {
-   // NS_LOG_FUNCTION (this);  
+   NS_LOG_FUNCTION (this);  
     auto iter = q_class.begin();
       for(;iter!=q_class.end();iter++){ 
          // std::cout<<*iter<<" ";    
@@ -82,9 +103,11 @@ DiffServ::DoPeek (void) const
     return 0;
 }
 
-Ptr<ns3::Packet> DiffServ::DoRemove (void) 
+template <typename Packet>
+Ptr<ns3::Packet> 
+DiffServ<Packet>::DoRemove (void) 
 {
-    //NS_LOG_FUNCTION (this);
+    NS_LOG_FUNCTION (this);
     auto iter = q_class.begin();
       for(;iter!=q_class.end();iter++){ 
          // std::cout<<*iter<<" ";    
@@ -95,12 +118,12 @@ Ptr<ns3::Packet> DiffServ::DoRemove (void)
     return 0;
 }
 
-
+template <typename Packet>
 uint32_t
-DiffServ::Classify (Ptr<ns3::Packet> p) 
+DiffServ<Packet>::Classify (Ptr<ns3::Packet> p) 
 {
 
-    //NS_LOG_FUNCTION (this)
+    NS_LOG_FUNCTION (this);
 
    if(DoEnqueue(p)){
        return 1;
@@ -109,11 +132,60 @@ DiffServ::Classify (Ptr<ns3::Packet> p)
    }
 }
 
+template <typename Packet>
 Ptr<ns3::Packet> 
-DiffServ::Schedule () 
+DiffServ<Packet>::Schedule () 
 {
- //   NS_LOG_FUNCTION (this);
-    return DoDequeue();
+    NS_LOG_FUNCTION (this);
+    Ptr<Packet> item = DoDequeue (Head());
+    return item;
 }
+
+
+template <typename Packet>
+bool
+DiffServ<Packet>::Enqueue (Ptr<Packet> item)
+ {
+   NS_LOG_FUNCTION (this << item);
+ 
+   return DoEnqueue (Tail (), item);
+ }
+ 
+ template <typename Packet>
+ Ptr<Packet>
+ DiffServ<Packet>::Dequeue (void)
+ {
+   NS_LOG_FUNCTION (this);
+ 
+   Ptr<Packet> item = DoDequeue (Head ());
+ 
+   NS_LOG_LOGIC ("Popped " << item);
+ 
+   return item;
+ }
+ 
+ template <typename Packet>
+ Ptr<Packet>
+ DiffServ<Packet>::Remove (void)
+ {
+   NS_LOG_FUNCTION (this);
+ 
+   Ptr<Packet> item = DoRemove (Head ());
+ 
+   NS_LOG_LOGIC ("Removed " << item);
+ 
+   return item;
+ }
+ 
+ template <typename Packet>
+ Ptr<const Packet>
+ DiffServ<Packet>::Peek (void) const
+ {
+   NS_LOG_FUNCTION (this);
+ 
+   return DoPeek (Head ());
+ }
+
+
 } // namespace ns3
   

@@ -1,47 +1,64 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-/*
- * Copyright (c) 2016 Universita' degli Studi di Napoli Federico II
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
 
 #ifndef SPQ_H
 #define SPQ_H
 
-#include "ns3/object.h"
-#include "diff-serv.h" 
+#include "diff-serv.h"
+#include "ns3/queue.h"
+#include "ns3/log.h"
 
 namespace ns3 {
 
-class SPQ: public DiffServ {
+template <typename Packet>
+class SPQ : public DiffServ<Packet> 
+{
+
 public:
+  SPQ ();
+
+  SPQ (QueueMode mode, std::vector<TrafficClass *> trafficClassVector);
 
   static TypeId GetTypeId (void);
 
-  SPQ ();
-  ~SPQ (); 
+  virtual ~SPQ ();
 
-  int32_t Classify (Ptr<QueueDiscItem> item) const;
+  bool Enqueue (Ptr<Packet> item);
+
+  Ptr<Packet> Dequeue ();
+
+  Ptr<Packet> Remove ();
+
+  Ptr<const Packet> Peek (void) const;
+
+  u_int32_t Classify (Ptr<Packet> item);
+
+  Ptr<Packet> Schedule ();
+
+  QueueMode m_mode; 
+  std::vector<TrafficClass*> q_class; 
 
 private:
-    
-  int32_t DoClassify (Ptr<QueueDiscItem> item);
+
+//Do Not Delete 
+ 
+ // Initialize_Q_class_Test ();
 
 
+   //using Queue<Packet>::Head;
+   //using Queue<Packet>::Tail;
+   using DiffServ<Packet>::Enqueue;
+   using DiffServ<Packet>::Dequeue;
+   using DiffServ<Packet>::Remove;
+   using DiffServ<Packet>::Peek;
 
+
+   using DiffServ<Packet>::Schedule;
+   using DiffServ<Packet>::Classify;
+
+  NS_LOG_TEMPLATE_DECLARE;
 };
 
+
+extern template class SPQ<Packet>;
 } // namespace ns3
 
-#endif /* PACKET_FILTER */
+#endif /* SPQ_H */
