@@ -33,6 +33,9 @@ public:
 
   Ptr<Packet> Schedule ();
 
+  QueueMode m_mode; 
+  std::vector<TrafficClass*> q_class; 
+
 private:
 
 //Do Not Delete 
@@ -40,12 +43,12 @@ private:
  // Initialize_Q_class_Test ();
 
 
-   using Queue<Packet>::Head;
-   using Queue<Packet>::Tail;
-   using Queue<Packet>::DoEnqueue;
-   using Queue<Packet>::DoDequeue;
-   using Queue<Packet>::DoRemove;
-   using Queue<Packet>::DoPeek;
+   //using Queue<Packet>::Head;
+   //using Queue<Packet>::Tail;
+   using DiffServ<Packet>::Enqueue;
+   using DiffServ<Packet>::Dequeue;
+   using DiffServ<Packet>::Remove;
+   using DiffServ<Packet>::Peek;
 
 
    using DiffServ<Packet>::Schedule;

@@ -49,7 +49,7 @@ SPQ<Packet>::Enqueue (Ptr<Packet> item)
 {
   NS_LOG_FUNCTION (this << item);
   //return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
-  return DiffServ<Packet>::Classify(item)
+  return Classify(item);
 }
 
 template <typename Packet>
@@ -58,7 +58,7 @@ SPQ<Packet>::Dequeue (void)
 {
   NS_LOG_FUNCTION (this);
   //Ptr<Packet> item = DiffServ<Packet>::DoDequeue (Queue<Packet>::Head());
-  Ptr<Packet> item = DiffServ<Packet>::Schedule ();
+  Ptr<Packet> item = Schedule ();
   NS_LOG_LOGIC("Popped " << item);
   return item;
 }
@@ -68,7 +68,7 @@ Ptr<Packet>
 SPQ<Packet>::Remove (void)
 {
   NS_LOG_FUNCTION (this);
-  Ptr<Packet> item = Queue<Packet>::DoRemove (Queue<Packet>::Head());
+  Ptr<Packet> item = DiffServ<Packet>::Remove();
   NS_LOG_LOGIC("Removed " << item);
   return item;
 }
@@ -79,7 +79,7 @@ SPQ<Packet>::Peek (void) const
 {
   NS_LOG_FUNCTION (this);
 
-  return Queue<Packet>::DoPeek(Queue<Packet>::Head());
+  return DiffServ<Packet>::Peek();
 }
 
 template <typename Packet>
@@ -97,7 +97,7 @@ SPQ<Packet>::Schedule ()
 {
   NS_LOG_FUNCTION (this);
 
-  return DiffServ<Packet>::Schedule()
+  return DiffServ<Packet>::Schedule();
 }
 
 

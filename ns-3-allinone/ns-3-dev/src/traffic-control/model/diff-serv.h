@@ -41,6 +41,15 @@ public:
 
   uint32_t Classify (Ptr<ns3::Packet> p);
 
+    // wE MUST define these because inherrited from Queue
+    bool Enqueue (Ptr<Packet> item);
+
+    Ptr<Packet> Dequeue ();
+
+    Ptr<Packet> Remove ();
+
+    Ptr<const Packet> Peek (void) const;
+
 
 
 private: 
@@ -58,14 +67,7 @@ private:
 
     Ptr<const ns3::Packet> DoPeek (void) const;
 
-    // wE MUST define these because inherrited from Queue
-    bool Enqueue (Ptr<Packet> item);
 
-    Ptr<Packet> Dequeue ();
-
-    Ptr<Packet> Remove ();
-
-    Ptr<const Packet> Peek (void) const;
 
    using Queue<Packet>::Head;
    using Queue<Packet>::Tail;
