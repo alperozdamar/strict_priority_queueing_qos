@@ -110,14 +110,16 @@ TrafficClass::Dequeue ()
 }
 
 Ptr<ns3::Packet>
-TrafficClass::Remove (void)
+TrafficClass::Remove ()
 {
-  Ptr<ns3::Packet> item;
-  return item;
+    if(!m_queue.empty()){
+       m_queue.pop();
+  }
+  return 0;
 }
 
 Ptr<ns3::Packet>
-TrafficClass::Peek (void)
+TrafficClass::Peek ()
 {
   NS_LOG_FUNCTION (this);
 

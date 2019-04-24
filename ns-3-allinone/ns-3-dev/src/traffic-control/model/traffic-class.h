@@ -31,8 +31,8 @@ public:
 
   // extra feature 
   bool IfEmpty ();
-  Ptr<ns3::Packet> Remove(void);
-  Ptr<ns3::Packet> Peek(void);
+  Ptr<ns3::Packet> Remove();
+  Ptr<ns3::Packet> Peek();
 
 private:
   uint32_t bytes;

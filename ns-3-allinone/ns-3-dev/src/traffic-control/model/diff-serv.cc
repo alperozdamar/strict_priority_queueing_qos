@@ -108,14 +108,24 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::DoRemove (void) 
 {
     NS_LOG_FUNCTION (this);
-    auto iter = q_class.begin();
-      for(;iter!=q_class.end();iter++){ 
-         // std::cout<<*iter<<" ";    
-            if((**iter).Peek()!=0){ //NULL check!
-                return (**iter).Remove();                    
-            }
-      }        
-    return 0;
+    // auto iter = q_class.begin();
+    //   for(;iter!=q_class.end();iter++){ 
+    //      // std::cout<<*iter<<" ";    
+    //         if((**iter).Peek()!=0){ //NULL check!
+    //             return (**iter).Remove();                    
+    //         }
+    //   }        
+    // return 0;
+
+
+    for (TrafficClass * tc : q_class)
+    {
+      if (tc-> Peek ()!= 0 )
+        {
+          return tc -> Remove ();
+        }
+    }
+  return 0;
 }
 
 template <typename Packet>
