@@ -118,7 +118,7 @@ int main (int argc, char *argv[])
   
     /* Connect node Sender & Router */
   NetDeviceContainer deviceSenderToRouter; 
-  deviceSenderToRouter = P2PSenderToRouter.Install(nodes.Get(0),nodes.Get(1));
+  deviceSenderToRouter = P2PSenderToRouter.Install(nodes.Get(0),nodes.Get(1)); //TODO
 
   /***
    * 
@@ -163,8 +163,8 @@ int main (int argc, char *argv[])
   //Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
   //PpNdRouterToServer -> SetDequeuQosFlag(true); 
 
-  //std::vector<TrafficClass*> vectorList;  
- // Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
+  std::vector<TrafficClass*> vectorList;  
+  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
 
   //PpNdRouterToServer -> SetQueue(spqInstance);
 
@@ -174,12 +174,10 @@ int main (int argc, char *argv[])
   interfaceRouterToReceiver= ipv4Address.Assign(deviceRouterToReceiver);
   
 
-  Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
+  //Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
   Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));   
   
-  
-  //TODO: Change Traffic Class Constructor...
-  //TrafficClass highQueue = new TrafficClass(500,queue1priority,false); 
+
   //TrafficClass lowQueue = new TrafficClass(500,queue2priority,false);  
   
   //TODO: Copy SourceIpAddress as SourcePortNumber. 
@@ -189,6 +187,11 @@ int main (int argc, char *argv[])
   //highQueue.filters.push_back(&filter);
 
   //TODO: We need to discuss this one together!(addTrafficClass)
+                                            
+  //TrafficClass *highQueue = new TrafficClass(1000,0,true,filter.elements); //TODO: priority level..
+  //TrafficClass *lowQueue = new TrafficClass (1000, 0, false, filter.elements);
+  
+
   //queue2->addTrafficClass(&lowQueue);
   //queue2->addTrafficClass(&highQueue);
   PpNdRouterToServer->SetQueue(queue2);
