@@ -13,7 +13,7 @@ SPQ<Packet>::GetTypeId (void)
 {
   static TypeId tid = TypeId (("ns3::SPQ<" + GetTypeParamName<SPQ<Packet>> () + ">").c_str ())
     .SetParent <DiffServ<Packet>> ()
-    .SetGroupName ("trafficClass")
+    .SetGroupName ("trafficControl")
     .template AddConstructor<SPQ<Packet>> () //)//TODO: I may need to add 2 parameters
 ;
   return tid;
@@ -103,17 +103,17 @@ SPQ<Packet>::Schedule ()
 
 //Do NOT Delete this for test purpose
 
-// template <typename Packet>
-// int //TODO check if return int 
-// SPQ<Packet>::Initialize_Q_class_Test ()
-// {
-  // std::vector<Filter*> filterList;
-  // TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
-  // std::vector<TrafficClass*>  trafficClassList;
-  // tcs.push_back(tc);
-  // this -> q_class = traffucClassList;
-//   NS_LOG_FUNCTION (this);
-// }
+template <typename Packet>
+int //TODO check if return int 
+SPQ<Packet>::Initialize_Q_class_Test ()
+{
+  std::vector<Filter*> filterList;
+  TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
+  std::vector<TrafficClass*>  trafficClassList;
+  tcs.push_back(tc);
+  this -> q_class = trafficClassList;
+  NS_LOG_FUNCTION (this);
+}
 
 
 
