@@ -6,11 +6,6 @@
 #include "ns3/log.h"
 #include "filter-element.h"
 #include "ns3/ipv4-address.h" 
-// #include "ns3/integer.h"
-// #include "ns3/ppp-header.h"
-// #include "ns3/pointer.h"
-// #include "queue-disc.h"
-
 
 namespace ns3 {
 
@@ -24,16 +19,14 @@ class SourceIpAddress: public FilterElement {
 public:
 
   static TypeId GetTypeId (void);
-
+  
   SourceIpAddress ();
-  ~SourceIpAddress ();
+  SourceIpAddress (Ipv4Address ipv4Address);
+  ~SourceIpAddress (); 
 
-  /**
-   * Standard value used by packet filters to indicate that no match was possible.
-   */
-  //static const int PF_NO_MATCH = -1;
 
-  bool Match (Ptr<Packet> packet);
+
+  bool match (Ptr<Packet> packet);
 
 
 private:

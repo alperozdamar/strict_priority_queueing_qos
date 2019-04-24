@@ -14,13 +14,13 @@ namespace ns3 {
 class FilterElement: public Object {
 public:
 
-//static TypeId GetTypeId (void);
+  //static TypeId GetTypeId (void);
 
- // FilterElement ();
+  //FilterElement ();
   //virtual ~FilterElement ();
   
 
-  virtual bool match (Ptr<Packet> packet) const = 0;
+  virtual bool match (Ptr<Packet> packet) = 0;
 
 
 };

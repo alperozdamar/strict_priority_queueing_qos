@@ -3,6 +3,7 @@
 #include "source-ip-address.h"
 #include "ns3/ipv4-header.h"
 #include "ns3/point-to-point-net-device.h"
+#include "ns3/source-ip-address.h"
 
 
 namespace ns3 {
@@ -16,26 +17,34 @@ namespace ns3 {
     SourceIpAddress::GetTypeId (void)
     {
     static TypeId tid = TypeId ("ns3::SourceIpAddress")
-        .SetParent<Object> ()
-        .SetGroupName ("TrafficControl")
+        .SetParent<FilterElement> ()
+        .SetGroupName ("trafficControl")
     ;
     return tid;
     }
 
-
     SourceIpAddress::SourceIpAddress ()
     {
-    NS_LOG_FUNCTION (this);
+     NS_LOG_FUNCTION (this);    
     }
+
+
+    SourceIpAddress::SourceIpAddress (Ipv4Address ipV4Address)
+    {
+     NS_LOG_FUNCTION (this);
+     this->value=ipV4Address;
+    }
+
+
 
     SourceIpAddress::~SourceIpAddress()
     {
-    NS_LOG_FUNCTION (this); 
+     NS_LOG_FUNCTION (this); 
     }
 
     
     bool
-    SourceIpAddress::Match (Ptr<Packet> packet) 
+    SourceIpAddress::match (Ptr<Packet> packet)
     {
     NS_LOG_FUNCTION (this << packet);
     
@@ -52,7 +61,7 @@ namespace ns3 {
         return true;
     }  else{
         std::cout<<" Not Matched Ipv4Address:" << Ipv4Address <<std::endl;
-        return false;
+        return false; 
 
     } 
 
