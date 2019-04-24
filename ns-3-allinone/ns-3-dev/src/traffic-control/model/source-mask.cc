@@ -42,14 +42,9 @@ namespace ns3 {
     SourceMask::Match (Ptr<Packet> packet) 
     {
       NS_LOG_FUNCTION (this << packet);    
-
       Ipv4Header ipv4Header;
       packet->PeekHeader(ipv4Header);
-
       Ipv4Address ipv4Address =ipv4Header.GetSource();
-
-
-
 
       if(value.IsMatch(ipv4Address,value.Get)){  
         std::cout<<"Mask:"<< value << " Matched with Ipv4Address:" << ipv4Address <<std::endl;  
