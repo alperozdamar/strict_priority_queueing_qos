@@ -34,3 +34,5 @@
 *.ipch
 
 *.bin
+
+*.json
