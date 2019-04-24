@@ -14,11 +14,6 @@ namespace ns3 {
 class FilterElement: public Object {
 public:
 
-  //static TypeId GetTypeId (void);
-
-  //FilterElement ();
-  //virtual ~FilterElement ();
-  
 
   virtual bool match (Ptr<Packet> packet) = 0;
 

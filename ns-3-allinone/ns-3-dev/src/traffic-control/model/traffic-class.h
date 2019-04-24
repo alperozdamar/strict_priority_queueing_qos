@@ -6,6 +6,8 @@
 #include "filter.h"
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/queue.h"
+#include <queue>
+#include <vector>
 
 
 namespace ns3 {
@@ -17,14 +19,20 @@ public:
   static TypeId GetTypeId (void);
 
   TrafficClass ();
+  TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault, std::vector<Filter *> filters);
   ~TrafficClass ();
 
+  //project spec
   std::vector<Filter*> filters;  
   bool Enqueue (Ptr<ns3::Packet> packet);
   Ptr<ns3::Packet> Dequeue();
   bool match (Ptr<ns3::Packet> packet); 
-  Ptr<ns3::Packet>Remove(void);
-  Ptr<ns3::Packet>Peek(void);
+
+
+  // extra feature 
+  bool IfEmpty ();
+  Ptr<ns3::Packet> Remove(void);
+  Ptr<ns3::Packet> Peek(void);
 
 private:
   uint32_t bytes;
@@ -34,9 +42,10 @@ private:
   double_t weight;        //related DDR
   uint32_t priority_level;  
   bool isDefault;        //only one traffic class should have isDefault value=1
-  Ptr<ns3::Queue<ns3::Packet>> m_queue;  
+  //Ptr<ns3::Queue<ns3::Packet>> m_queue;
+  std::queue<Ptr<Packet>> m_queue;  
 };
-  //PacketFilter
+
 } // namespace ns3
 
 #endif /* TRAFFICCLASS_H */
