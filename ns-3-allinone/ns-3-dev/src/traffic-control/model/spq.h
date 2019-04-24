@@ -33,7 +33,8 @@ public:
 
   Ptr<Packet> Schedule ();
 
-  std::vector<TrafficClass*> AddTrafficClass (TrafficClass* trafficClass);
+  //std::vector<TrafficClass*> 
+  bool AddTrafficClass (TrafficClass* trafficClass);
 
   QueueMode m_mode; 
   std::vector<TrafficClass*> q_class; 
