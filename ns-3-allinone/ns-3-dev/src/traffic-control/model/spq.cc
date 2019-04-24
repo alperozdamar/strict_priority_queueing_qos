@@ -101,19 +101,19 @@ SPQ<Packet>::Schedule ()
 }
 
 
-//Do NOT Delete this for test purpose
-
-// template <typename Packet>
-// int //TODO check if return int 
-// SPQ<Packet>::Initialize_Q_class_Test ()
-// {
-//   std::vector<Filter*> filterList;
-//   TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
-//   std::vector<TrafficClass*>  trafficClassList;
-//   tcs.push_back(tc);
-//   this -> q_class = trafficClassList;
-//   NS_LOG_FUNCTION (this);
-// }
+template <typename Packet>
+//std::vector<TrafficClass*>
+bool
+SPQ<Packet>::AddTrafficClass (TrafficClass* trafficClass)
+{
+  std::vector<Filter*> filterList;
+  //TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
+  std::vector<TrafficClass*>  trafficClassList;
+  trafficClassList.push_back(trafficClass);
+  this -> q_class = trafficClassList;
+  NS_LOG_FUNCTION (this);
+  return true;
+}
 
 
 
