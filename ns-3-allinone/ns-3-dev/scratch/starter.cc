@@ -9,7 +9,8 @@
 #include <iomanip> 
 #include <chrono> 
 #include "ns3/udp-client.h"
-#include "ns3/spq.h"
+#include "ns3/source-ip-address.h" 
+#include "ns3/spq.h" 
 
 
 using namespace ns3;
@@ -137,6 +138,8 @@ int main (int argc, char *argv[])
   //PpNdSenderToRouter -> SetQueue(spq.q_class[0]);
   
 
+
+
   Ipv4AddressHelper ipv4Address;
   /* Assign IP to SenderRouter */  
   ipv4Address.SetBase ("10.0.1.0", "255.255.255.0");
@@ -157,24 +160,41 @@ int main (int argc, char *argv[])
   deviceRouterToReceiver = P2PRouterToReceiver.Install(nodes.Get(1),nodes.Get(2));  
  
   //TODO:....Check!
-  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
-  PpNdRouterToServer -> SetDequeuQosFlag(true); 
+  //Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
+  //PpNdRouterToServer -> SetDequeuQosFlag(true); 
 
+  //std::vector<TrafficClass*> vectorList;  
+ // Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
 
-  std::vector<TrafficClass*> vectorList; 
-  
-  Ptr<SPQ<Packet>> spqInstance = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
-
-
-
-  PpNdRouterToServer -> SetQueue(spqInstance);
+  //PpNdRouterToServer -> SetQueue(spqInstance);
 
   /* Assign IP to Router2Receiver */
   ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");
   Ipv4InterfaceContainer interfaceRouterToReceiver;
   interfaceRouterToReceiver= ipv4Address.Assign(deviceRouterToReceiver);
   
+
+  Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
+  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));   
   
+  
+  //TODO: Change Traffic Class Constructor...
+  //TrafficClass highQueue = new TrafficClass(500,queue1priority,false); 
+  //TrafficClass lowQueue = new TrafficClass(500,queue2priority,false);  
+  
+  //TODO: Copy SourceIpAddress as SourcePortNumber. 
+    SourceIpAddress sourceIpAddress = SourceIpAddress(Ipv4Address("192.168.1.1"));;//TODO:Discuss constructor together!!
+  Filter filter;
+  filter.elements.push_back(&sourceIpAddress);
+  //highQueue.filters.push_back(&filter);
+
+  //TODO: We need to discuss this one together!(addTrafficClass)
+  //queue2->addTrafficClass(&lowQueue);
+  //queue2->addTrafficClass(&highQueue);
+  PpNdRouterToServer->SetQueue(queue2);
+  Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+
+
   Address serverAddress;
   serverAddress = Address(interfaceRouterToReceiver.GetAddress(1));
 
