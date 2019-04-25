@@ -26,6 +26,7 @@ def build(bld):
       'model/diff-serv.cc',
       'model/traffic-class.cc',
       'model/source-ip-address.cc',
+      'model/destination-ip-address.cc',
       'model/protocol-number.cc',
       'model/destination-port-number.cc',
       'model/source-port-number.cc',
