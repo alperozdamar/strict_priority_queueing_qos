@@ -29,7 +29,7 @@ uint16_t serverPort = 9;
 static int numberOfQueue=0;
 static uint32_t dataRate = 1;
 static uint32_t queue1priority = 1;
-static uint32_t queue2priority = 1;
+static uint32_t queue2priority = 3;
 
 /**
  * 
@@ -122,17 +122,6 @@ int main (int argc, char *argv[])
   NetDeviceContainer deviceSenderToRouter; 
   deviceSenderToRouter = P2PSenderToRouter.Install(nodes.Get(0),nodes.Get(1)); //TODO
 
-  /***
-   * 
-   * DEFINE SPQ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   *    
-   * */
-  //SPQ spq = new SPQ(); 
-     
-  //for(size_t i = 1; i <= numberOfQueue; i++)
-  //{       
-  // spq.q_class[i]=new TrafficClass();    
-  //}  
 
   Ptr <PointToPointNetDevice> PpNdSenderToRouter = DynamicCast<PointToPointNetDevice> (deviceSenderToRouter.Get(1));
   PpNdSenderToRouter -> SetEnqueueQosFlag(true);  
@@ -179,45 +168,64 @@ int main (int argc, char *argv[])
   //Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
   Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));         
  
-  uint32_t queueHighMax_packets = 1000;
-  uint32_t queueLowMax_packets = 1000;
-  //uint32_t max_bytes = 0;  
-  //uint32_t priority_level = 0; queue1priority,queue2priority  
-  bool queueHighIs_default = false;
-  bool queueLow_default = true;
+
+
+  uint32_t Q1maxPacket = 1000;
+  uint32_t Q2maxPacket = 500;
+
+  uint32_t Q1maxBytes = 1000;
+  uint32_t Q2maxBytes = 500; 
+
+  double_t Q1weight = 0;
+  double_t Q2weight = 0;
+
+  uint32_t Q1priority_level = 1;
+  uint32_t Q2priority_level = 3;
+
+  bool Q1isDefault = false;
+  bool Q2isDefault = true;
+
+  std::vector<Filter*> filters;
+
   std::string filterSourceIpAddress="10.0.1.0";
   std::string filterDestinationIpAddress="10.0.2.0";
   uint32_t filterSourcePort=5060;
   uint32_t filterDestinationPort=6060;
 
-  SourceIpAddress sourceIpAddressHighQueue = SourceIpAddress(Ipv4Address("10.0.1.0"));
-  SourceIpAddress sourceIpAddressLowQueue = SourceIpAddress(Ipv4Address("10.0.8.8"));
-  SourceIpAddress destinationIpAddressHighQueue = SourceIpAddress(Ipv4Address("10.0.2.0"));
-  SourceIpAddress destinationIpAddressLowQueue = SourceIpAddress(Ipv4Address("10.0.9.9"));
-  SourcePortNumber sourcePortNumberHighQueue= SourcePortNumber(filterSourcePort);
-  SourcePortNumber sourcePortNumberLowQueue= SourcePortNumber(filterSourcePort);
-  DestinationPortNumber destinationPortNumberHighQueue= DestinationPortNumber(filterDestinationPort);
-  DestinationPortNumber destinationPortNumberLowQueue= DestinationPortNumber(filterDestinationPort);
 
-  Filter filterForHighQueue;
-  filterForHighQueue.elements.push_back(&sourceIpAddressHighQueue);
-  filterForHighQueue.elements.push_back(&sourcePortNumberHighQueue);
-  filterForHighQueue.elements.push_back(&destinationIpAddressHighQueue);
-  filterForHighQueue.elements.push_back(&destinationPortNumberHighQueue);
+  SourceIpAddress sourceIpAddressQ1 = SourceIpAddress(Ipv4Address("10.0.1.0"));
+  SourceIpAddress sourceIpAddressQ2 = SourceIpAddress(Ipv4Address("10.0.8.8"));
+  SourceIpAddress destinationIpAddressQ1 = SourceIpAddress(Ipv4Address("10.0.2.0"));
+  SourceIpAddress destinationIpAddressQ2 = SourceIpAddress(Ipv4Address("10.0.9.9"));
+  SourcePortNumber sourcePortNumberQ1 = SourcePortNumber(filterSourcePort);
+  SourcePortNumber sourcePortNumberQ2= SourcePortNumber(filterSourcePort);
+  DestinationPortNumber destinationPortNumberQ1= DestinationPortNumber(filterDestinationPort);
+  DestinationPortNumber destinationPortNumberQ2= DestinationPortNumber(filterDestinationPort);
 
-  Filter filterForLowQueue;
-  filterForLowQueue.elements.push_back(&sourceIpAddressHighQueue);
-  filterForLowQueue.elements.push_back(&sourcePortNumberLowQueue);
-  filterForLowQueue.elements.push_back(&destinationIpAddressHighQueue);
-  filterForLowQueue.elements.push_back(&destinationPortNumberLowQueue);                           
+  static Filter filterForQ1;
+  filterForQ1.elements.push_back(&sourceIpAddressQ1);
+  filterForQ1.elements.push_back(&sourcePortNumberQ2);
+  filterForQ1.elements.push_back(&destinationIpAddressQ1);
+  filterForQ1.elements.push_back(&destinationPortNumberQ2);
 
+  filters.push_back(&filterForQ1);
+
+  static Filter filterForQ2;
+  filterForQ2.elements.push_back(&sourceIpAddressQ1);
+  filterForQ2.elements.push_back(&sourcePortNumberQ2);
+  filterForQ2.elements.push_back(&destinationIpAddressQ1);
+  filterForQ2.elements.push_back(&destinationPortNumberQ2);
+
+ // filters.push_back(&filterForQ2);
   //We need to pass these queues to vectorList of the SPQ!  
-  //TODO:priority_level
-  //TrafficClass *highQueue = new TrafficClass(queueHighMax_packets,0,queueHighIs_default,filterForHighQueue.elements); 
-  //TrafficClass *lowQueue = new TrafficClass(queueLowMax_packets, 0, queueLow_default, filterForLowQueue.elements);    
 
-  //queue2->addTrafficClass(&lowQueue);
-  //queue2->addTrafficClass(&highQueue);  
+  
+  
+  //TrafficClass *Q1 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters); 
+  //TrafficClass *Q2 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters);    
+
+  queue2->AddTrafficClass(Q1);
+  //queue2->AddTrafficClass(Q2);  
 
   PpNdRouterToServer->SetQueue(queue2); //This is correct.confirmed!
 
