@@ -1,6 +1,6 @@
 
-#ifndef SOURCE_IP_ADDRESS_H
-#define SOURCE_IP_ADDRESS_H
+#ifndef SOURCE_MASK_H
+#define SOURCE_MASK_H
 
 
 #include "ns3/log.h"
