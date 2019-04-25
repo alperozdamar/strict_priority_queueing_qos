@@ -29,6 +29,7 @@ def build(bld):
       'model/protocol-number.cc',
       'model/destination-port-number.cc',
       'model/source-port-number.cc',
+      'model/source-mask.cc',
       'helper/traffic-control-helper.cc',
       'model/destination-ip-address.cc',
       'helper/queue-disc-container.cc'
@@ -72,6 +73,7 @@ def build(bld):
       'model/source-port-number.h',
       'model/source-ip-address.h',
       'model/destination-ip-address.h',
+      'model/source-mask.h',
       'helper/traffic-control-helper.h',
       'helper/queue-disc-container.h'
         ]
