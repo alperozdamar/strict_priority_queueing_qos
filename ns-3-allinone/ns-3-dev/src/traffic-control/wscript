@@ -26,6 +26,7 @@ def build(bld):
       'model/diff-serv.cc',
       'model/traffic-class.cc',
       'model/source-ip-address.cc',
+      'model/destination-ip-address.cc',
       'model/protocol-number.cc',
       'model/destination-port-number.cc',
       'helper/traffic-control-helper.cc',
@@ -68,6 +69,7 @@ def build(bld):
       'model/protocol-number.h',
       'model/destination-port-number.h',
       'model/source-ip-address.h',
+      'model/destination-ip-address.h',
       'helper/traffic-control-helper.h',
       'helper/queue-disc-container.h'
         ]
