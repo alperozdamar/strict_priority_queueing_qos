@@ -20,12 +20,12 @@ TrafficClass::TrafficClass ()
   NS_LOG_FUNCTION (this);
 }
 
-TrafficClass::TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault,
-                            std::vector<Filter *> filters)
+TrafficClass::TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault,uint32_t priority_level,std::vector<Filter *> filters)
 {
   this->maxPackets = maxPackets;
   this->packets = packets;
   this->isDefault = isDefault;
+  this->priority_level = priority_level;
   this->filters = filters;
   NS_LOG_FUNCTION (this);
 }

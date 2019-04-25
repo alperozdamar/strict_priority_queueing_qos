@@ -19,11 +19,11 @@ public:
   static TypeId GetTypeId (void);
 
   TrafficClass ();
-  TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault, std::vector<Filter *> filters);
+  TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault,uint32_t priority_level, std::vector<Filter *> filters);
   ~TrafficClass ();
 
   //project spec
-  std::vector<Filter*> filters;  
+  std::vector<Filter*> filters; 
   bool Enqueue (Ptr<ns3::Packet> packet);
   Ptr<ns3::Packet> Dequeue();
   bool match (Ptr<ns3::Packet> packet); 
