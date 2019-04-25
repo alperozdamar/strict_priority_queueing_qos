@@ -10,6 +10,8 @@
 #include <chrono> 
 #include "ns3/udp-client.h"
 #include "ns3/source-ip-address.h" 
+#include "ns3/destination-port-number.h"
+#include "ns3/source-port-number.h"  
 #include "ns3/spq.h" 
 
 
@@ -175,28 +177,51 @@ int main (int argc, char *argv[])
   
 
   //Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
-  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));   
-  
+  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));         
+ 
+  uint32_t queueHighMax_packets = 1000;
+  uint32_t queueLowMax_packets = 1000;
+  //uint32_t max_bytes = 0;  
+  //uint32_t priority_level = 0; queue1priority,queue2priority  
+  bool queueHighIs_default = false;
+  bool queueLow_default = true;
+  std::string filterSourceIpAddress="10.0.1.0";
+  std::string filterDestinationIpAddress="10.0.2.0";
+  uint32_t filterSourcePort=5060;
+  uint32_t filterDestinationPort=6060;
 
-  //TrafficClass lowQueue = new TrafficClass(500,queue2priority,false);  
-  
-  //TODO: Copy SourceIpAddress as SourcePortNumber. 
-    SourceIpAddress sourceIpAddress = SourceIpAddress(Ipv4Address("192.168.1.1"));;//TODO:Discuss constructor together!!
-  Filter filter;
-  filter.elements.push_back(&sourceIpAddress);
-  //highQueue.filters.push_back(&filter);
+  SourceIpAddress sourceIpAddressHighQueue = SourceIpAddress(Ipv4Address("10.0.1.0"));
+  SourceIpAddress sourceIpAddressLowQueue = SourceIpAddress(Ipv4Address("10.0.8.8"));
+  SourceIpAddress destinationIpAddressHighQueue = SourceIpAddress(Ipv4Address("10.0.2.0"));
+  SourceIpAddress destinationIpAddressLowQueue = SourceIpAddress(Ipv4Address("10.0.9.9"));
+  SourcePortNumber sourcePortNumberHighQueue= SourcePortNumber(filterSourcePort);
+  SourcePortNumber sourcePortNumberLowQueue= SourcePortNumber(filterSourcePort);
+  DestinationPortNumber destinationPortNumberHighQueue= DestinationPortNumber(filterDestinationPort);
+  DestinationPortNumber destinationPortNumberLowQueue= DestinationPortNumber(filterDestinationPort);
 
-  //TODO: We need to discuss this one together!(addTrafficClass)
-                                            
-  //TrafficClass *highQueue = new TrafficClass(1000,0,true,filter.elements); //TODO: priority level..
-  //TrafficClass *lowQueue = new TrafficClass (1000, 0, false, filter.elements);
-  
+  Filter filterForHighQueue;
+  filterForHighQueue.elements.push_back(&sourceIpAddressHighQueue);
+  filterForHighQueue.elements.push_back(&sourcePortNumberHighQueue);
+  filterForHighQueue.elements.push_back(&destinationIpAddressHighQueue);
+  filterForHighQueue.elements.push_back(&destinationPortNumberHighQueue);
+
+  Filter filterForLowQueue;
+  filterForLowQueue.elements.push_back(&sourceIpAddressHighQueue);
+  filterForLowQueue.elements.push_back(&sourcePortNumberLowQueue);
+  filterForLowQueue.elements.push_back(&destinationIpAddressHighQueue);
+  filterForLowQueue.elements.push_back(&destinationPortNumberLowQueue);                           
+
+  //We need to pass these queues to vectorList of the SPQ!  
+  //TODO:priority_level
+  //TrafficClass *highQueue = new TrafficClass(queueHighMax_packets,0,queueHighIs_default,filterForHighQueue.elements); 
+  //TrafficClass *lowQueue = new TrafficClass(queueLowMax_packets, 0, queueLow_default, filterForLowQueue.elements);    
 
   //queue2->addTrafficClass(&lowQueue);
-  //queue2->addTrafficClass(&highQueue);
-  PpNdRouterToServer->SetQueue(queue2);
-  Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+  //queue2->addTrafficClass(&highQueue);  
 
+  PpNdRouterToServer->SetQueue(queue2); //This is correct.confirmed!
+
+  Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
   Address serverAddress;
   serverAddress = Address(interfaceRouterToReceiver.GetAddress(1));
