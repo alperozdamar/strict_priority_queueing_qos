@@ -19,7 +19,7 @@ public:
   static TypeId GetTypeId (void);
 
   TrafficClass ();
-  TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault,uint32_t priority_level, std::vector<Filter *> filters);
+  TrafficClass (uint32_t maxPackets, uint32_t maxBytes, double_t weight, uint32_t priority_level, bool isDefault, std::vector<Filter *> filters);
   ~TrafficClass ();
 
   //project spec

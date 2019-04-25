@@ -11,7 +11,9 @@ TypeId
 TrafficClass::GetTypeId (void)
 {
   static TypeId tid =
-      TypeId ("ns3::TrafficClass").SetParent<Object> ().SetGroupName ("TrafficControl");
+      TypeId ("ns3::TrafficClass")
+        .SetParent<Object> ()
+        .SetGroupName ("TrafficControl");
   return tid;
 }
 
@@ -20,12 +22,13 @@ TrafficClass::TrafficClass ()
   NS_LOG_FUNCTION (this);
 }
 
-TrafficClass::TrafficClass (uint32_t maxPackets, uint32_t packets, bool isDefault,uint32_t priority_level,std::vector<Filter *> filters)
+TrafficClass::TrafficClass (uint32_t maxPackets, uint32_t maxBytes, double_t weight, uint32_t priority_level, bool isDefault, std::vector<Filter *> filters)
 {
   this->maxPackets = maxPackets;
-  this->packets = packets;
-  this->isDefault = isDefault;
+  this->maxBytes = maxBytes;
+  this->weight = weight;
   this->priority_level = priority_level;
+  this->isDefault = isDefault;
   this->filters = filters;
   NS_LOG_FUNCTION (this);
 }

@@ -109,7 +109,7 @@ SPQ<Packet>::AddTrafficClass (TrafficClass* trafficClass)
   std::vector<Filter*> filterList;
   //TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
   std::vector<TrafficClass*>  trafficClassList;
-  trafficClassList.push_back(trafficClass);
+  trafficClassList.push_back(&trafficClass);
   this -> q_class = trafficClassList;
   NS_LOG_FUNCTION (this);
   return true;
