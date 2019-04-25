@@ -1,5 +1,6 @@
 
 #include "ns3/log.h"
+#include "destination-ip-address.h" //TODO
 #include "ns3/ipv4-header.h"
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/source-ip-address.h"
@@ -7,28 +8,28 @@
 
 namespace ns3 {
 
-    NS_LOG_COMPONENT_DEFINE ("SourceIpAddress");
+    NS_LOG_COMPONENT_DEFINE ("DestinationIpAddress");
 
 
-    NS_OBJECT_ENSURE_REGISTERED (SourceIpAddress);
+    NS_OBJECT_ENSURE_REGISTERED (DestinationIpAddress);
 
     TypeId 
-    SourceIpAddress::GetTypeId (void)
+    DestinationIpAddress::GetTypeId (void)
     {
-    static TypeId tid = TypeId ("ns3::SourceIpAddress")
+    static TypeId tid = TypeId ("ns3::DestinationIpAddress")
         .SetParent<FilterElement> ()
         .SetGroupName ("trafficControl")
     ;
     return tid;
     }
 
-    SourceIpAddress::SourceIpAddress ()
+    DestinationIpAddress::DestinationIpAddress ()
     {
      NS_LOG_FUNCTION (this);    
     }
 
 
-    SourceIpAddress::SourceIpAddress (Ipv4Address ipV4Address)
+    DestinationIpAddress::DestinationIpAddress (Ipv4Address ipV4Address)
     {
      NS_LOG_FUNCTION (this);
      this->value=ipV4Address;
@@ -36,14 +37,14 @@ namespace ns3 {
 
 
 
-    SourceIpAddress::~SourceIpAddress()
+    DestinationIpAddress::~DestinationIpAddress()
     {
      NS_LOG_FUNCTION (this); 
     }
 
     
     bool
-    SourceIpAddress::match (Ptr<Packet> packet)
+    DestinationIpAddress::match (Ptr<Packet> packet)
     {
     NS_LOG_FUNCTION (this << packet);
     
@@ -52,7 +53,7 @@ namespace ns3 {
     packet->PeekHeader(ipv4Header);
 
     
-    Ipv4Address Ipv4Address =ipv4Header.GetSource();
+    Ipv4Address Ipv4Address =ipv4Header.GetSource();//TODO
 
     
     if(Ipv4Address.IsEqual(value)){

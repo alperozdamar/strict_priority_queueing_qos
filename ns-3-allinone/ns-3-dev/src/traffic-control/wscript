@@ -30,6 +30,7 @@ def build(bld):
       'model/destination-port-number.cc',
       'model/source-port-number.cc',
       'helper/traffic-control-helper.cc',
+      'model/destination-ip-address.cc',
       'helper/queue-disc-container.cc'
         ]
 
@@ -70,6 +71,7 @@ def build(bld):
       'model/destination-port-number.h',
       'model/source-port-number.h',
       'model/source-ip-address.h',
+      'model/destination-ip-address.h',
       'helper/traffic-control-helper.h',
       'helper/queue-disc-container.h'
         ]

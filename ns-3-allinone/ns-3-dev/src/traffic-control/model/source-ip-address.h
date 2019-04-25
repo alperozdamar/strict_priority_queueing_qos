@@ -4,17 +4,11 @@
 
 
 #include "ns3/log.h"
-#include "filter-element.h"
+#include "ns3/filter-element.h"
 #include "ns3/ipv4-address.h" 
 
 namespace ns3 {
 
-/**
- * \ingroup traffic-control
- *
- * PacketFilter is the abstract base class for filters used by queue discs
- * to classify packets.
- */
 class SourceIpAddress: public FilterElement {
 public:
 
