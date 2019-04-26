@@ -170,20 +170,20 @@ int main (int argc, char *argv[])
  
 
 
-  uint32_t Q1maxPacket = 1000;
-  uint32_t Q2maxPacket = 500;
+  //uint32_t Q1maxPacket = 1000;
+  //uint32_t Q2maxPacket = 500;
 
-  uint32_t Q1maxBytes = 1000;
-  uint32_t Q2maxBytes = 500; 
+  //uint32_t Q1maxBytes = 1000;
+  //uint32_t Q2maxBytes = 500; 
 
-  double_t Q1weight = 0;
-  double_t Q2weight = 0;
+ // double_t Q1weight = 0;
+ // double_t Q2weight = 0;
 
-  uint32_t Q1priority_level = 1;
-  uint32_t Q2priority_level = 3;
+  //uint32_t Q1priority_level = 1;
+  //uint32_t Q2priority_level = 3;
 
-  bool Q1isDefault = false;
-  bool Q2isDefault = true;
+  //bool Q1isDefault = false;
+  //bool Q2isDefault = true;
 
   std::vector<Filter*> filters;
 
@@ -224,7 +224,7 @@ int main (int argc, char *argv[])
   //TrafficClass *Q1 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters); 
   //TrafficClass *Q2 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters);    
 
-  queue2->AddTrafficClass(Q1);
+  //queue2->AddTrafficClass(Q1);
   //queue2->AddTrafficClass(Q2);  
 
   PpNdRouterToServer->SetQueue(queue2); //This is correct.confirmed!

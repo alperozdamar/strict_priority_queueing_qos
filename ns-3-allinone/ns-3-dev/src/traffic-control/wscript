@@ -31,8 +31,7 @@ def build(bld):
       'model/destination-port-number.cc',
       'model/source-port-number.cc',
       'model/source-mask.cc',
-      'helper/traffic-control-helper.cc',
-      'model/destination-ip-address.cc',
+      'helper/traffic-control-helper.cc',      
       'helper/queue-disc-container.cc'
         ]
 

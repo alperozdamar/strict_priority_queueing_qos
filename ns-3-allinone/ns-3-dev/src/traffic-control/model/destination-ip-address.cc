@@ -3,7 +3,6 @@
 #include "ns3/ipv4-header.h"
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/destination-ip-address.h"
-#include "destination-ip-address.h"
 
 namespace ns3 {
 

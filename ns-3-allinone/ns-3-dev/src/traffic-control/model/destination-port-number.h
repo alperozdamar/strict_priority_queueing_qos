@@ -2,7 +2,7 @@
 #ifndef DESTINATION_PORT_NUMBER_H
 #define DESTINATION_PORT_NUMBER_H
 
-#include "filter-element.h"
+#include "ns3/filter-element.h"
 #include "ns3/log.h"
 
 
