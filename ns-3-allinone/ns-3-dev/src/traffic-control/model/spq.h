@@ -33,18 +33,12 @@ public:
 
   Ptr<Packet> Schedule ();
 
-  //std::vector<TrafficClass*> 
   bool AddTrafficClass (TrafficClass* trafficClass);
 
   QueueMode m_mode; 
   std::vector<TrafficClass*> q_class; 
 
 private:
-
-//Do Not Delete 
- 
- // Initialize_Q_class_Test ();
-
 
    //using Queue<Packet>::Head;
    //using Queue<Packet>::Tail;
