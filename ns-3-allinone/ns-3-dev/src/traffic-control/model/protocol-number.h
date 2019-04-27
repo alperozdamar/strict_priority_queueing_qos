@@ -25,8 +25,8 @@ public:
   static TypeId GetTypeId (void);
 
   ProtocolNumber ();
-  ~ProtocolNumber ();
-  
+  ProtocolNumber(uint32_t val);  
+  ~ProtocolNumber ();  
 
   bool match (Ptr<ns3::Packet> packet);
 

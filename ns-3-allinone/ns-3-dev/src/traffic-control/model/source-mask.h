@@ -1,3 +1,4 @@
+
 // #ifndef SOURCE_MASK_H
 // #define SOURCE_MASK_H
 
@@ -8,7 +9,12 @@
 
 // namespace ns3 {
 
-
+// /**
+//  * \ingroup traffic-control
+//  *
+//  * PacketFilter is the abstract base class for filters used by queue discs
+//  * to classify packets.
+//  */
 // class SourceMask: public FilterElement {
 // public:
 
@@ -18,8 +24,12 @@
 //   SourceMask (Ipv4Mask ipv4Mask);  
 //   ~SourceMask ();
 
+//   /**
+//    * Standard value used by packet filters to indicate that no match was possible.
+//    */
+//   //static const int PF_NO_MATCH = -1;
 
-//   bool match (Ptr<Packet> packet);
+//   bool Match (Ptr<Packet> packet);
 
 
 // private:
@@ -29,4 +39,4 @@
 
 // } // namespace ns3
 
-// #endif /* SOURCE_MASK_H */
+// #endif /* SOURCE_IP_ADDRESS */
