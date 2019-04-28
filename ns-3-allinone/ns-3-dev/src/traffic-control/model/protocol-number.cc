@@ -49,6 +49,9 @@ namespace ns3 {
     
     uint8_t protocolNumber = ipv4Header.GetProtocol();
     
+    std::cout << " ProtocolNumber.protocolNumber:" << protocolNumber << std::endl;
+    std::cout << " ProtocolNumber.value:" << value << std::endl;
+
     if(protocolNumber==value ){
         std::cout<<" Matched protocolNumber:" << protocolNumber <<std::endl;
         return true;

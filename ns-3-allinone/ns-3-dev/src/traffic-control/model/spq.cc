@@ -51,23 +51,14 @@ bool
 SPQ<Packet>::Enqueue (Ptr<Packet> p)
 {
   NS_LOG_FUNCTION (this << p);
-
+  
   printf("Test.SPQ.Enqueue\n");
-
-  //return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
-  //return Classify(item);
-  //if (tc-> Peek ()!= 0 && Classify(item)== 1)
-   //if (Classify(p) != -1)
-   // {
-
-      //return 1 in case of not matched!
-      u_int32_t index = Classify(p); //return the index of match!!
+  //return 1 in case of not matched!
+  u_int32_t index = Classify(p); //return the index of match!!
       
-      std::cout<<"Test.SPQ.Enqueue.index.matched: "<<index<<std::endl;
-      q_class[index] -> Enqueue (p);
-      return true;
-   // } 
- // return false;
+  std::cout<<"Test.SPQ.Enqueue.index.matched: "<<index << ",priority:" <<q_class[index]->priority_level  <<std::endl;
+  q_class[index] -> Enqueue (p);
+  return true;
 }
 
 template <typename Packet>
@@ -76,33 +67,23 @@ SPQ<Packet>::Dequeue (void)
 {
   NS_LOG_FUNCTION (this);
   printf("Test.SPQ.Dequeue\n");
+  Ptr<Packet> p; 
 
-  return  Schedule();
+  if(!(q_class[0]->IfEmpty())){
+    p = Schedule();
+    q_class[0]->Dequeue();   
+  }else{
+    if(q_class[0]->IfEmpty()){
+      q_class[1]->Dequeue();
+      //DiffServ<Packet>::Dequeue();
+    }
 
-  //for (int32_t i = 0; i < q_class[i]; i++){
+  }
 
-    // // method 1
-    //   if  ((q_class[i]-> priority_level == 1  && q_class[i]->IfEmpty() != true)){
-    //     queue_index_with_high_priority = i;
-    //     p = q_class -> Schedule();
-    //   } else if (Schedule()== 0) { 
-    //      p = q_class[i] -> Dequeue();
-    //   } else {
-    //     return 0;
-    //   }
 
-    // // method 2
+  DiffServ<Packet>::Dequeue();
 
-    //   while ((q_class[i]-> priority_level == 1  && q_class[i]->IfEmpty() != true)){
-    //     queue_index_with_high_priority = i;
-    //     return p = Schedule();
-    //   } 
-    //   if (q_class[queue_index_with_high_priority] ->IfEmpty == true) {
-         
-    //      p = q_class[i] -> Dequeue();
-    //   } else {
-    //     return 0;
-    //   
+  return  p;
 }
 
 template <typename Packet>
@@ -140,15 +121,15 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
   {
     if ((q_class[i]-> match (p)))
     {
-       std::cout<<"SPQ.Matched!"<<std::endl;
+      std::cout<<"SPQ.Matched!, for priority:"<< q_class[i]->priority_level <<std::endl;
       return index = i;
     } 
     //NOT MATCHED case, we need to put this packet to default queue.
     else{      
-      std::cout<<"SPQ.Not Matched!"<<std::endl;
-      std::cout<<"SPQ.q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
+      //std::cout<<"SPQ.Not Matched!"<<std::endl;
+      //std::cout<<"SPQ.q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
       if (q_class[i]->isDefault){ //low i=1 or 0
-        std::cout<<"SPQ.Not Matched! Default Queue's index value is "<< i <<std::endl;
+        std::cout<<"SPQ.Not Matched! Putting to Default Queue. Index value is "<< i << ", for priority:"<< q_class[i]->priority_level <<std::endl;
         index = i ; // Check
       }
     }
@@ -165,20 +146,37 @@ SPQ<Packet>::Schedule ()
   NS_LOG_FUNCTION (this);   
   std::cout<<"Test.SPQ.Schedule!"<<std::endl;
   Ptr<Packet> p;
-  for(uint32_t priority= 0; priority < 100 ; priority++){   
-    //std::cout<<"SPQ.q_class.size():"<<  q_class.size()<<std::endl;
-    for (uint32_t i=0; i< q_class.size();i++)
-    {   
-       // std::cout<<"SPQ.priority_level:"<<  priority <<std::endl;
-       // std::cout<<"SPQ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
-        if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
-        {          
-          std::cout<<"SPQ.priority_level MATCHED!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
-          Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
-          return p;
+  // for(uint32_t priority= 0; priority < 100 ; priority++){   
+  //   //std::cout<<"SPQ.q_class.size():"<<  q_class.size()<<std::endl;
+  //   for (uint32_t i=0; i< q_class.size();i++)
+  //   {   
+  //      // std::cout<<"SPQ.priority_level:"<<  priority <<std::endl;
+  //      // std::cout<<"SPQ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
+  //       if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
+  //       {          
+  //         std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;          
+  //         //Peek()==> Killing our system.          
+  //         Ptr<Packet> p = q_class[i] -> Peek(); // Dequeue()          
+  //         q_class[i] -> Dequeue();
+  //         return p; 
+  //       }
+  //   }
+  // }
+
+   
+
+        if  (q_class[0]-> priority_level == 77  && q_class[0]->IfEmpty() != true)//HIGH PRIORITY 
+        { 
+            //std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;          
+            //Peek()==> Killing our system.          
+              Ptr<Packet> p = q_class[0] -> Dequeue(); // Dequeue()          
+              //q_class[0] -> Dequeue();
+            return p; 
         }
-    }
-  }
+        // else {
+        //    Ptr<Packet> p = q_class[1]->Dequeue();
+        //    return p;
+        // }
 
     std::cout<< "PROBLEM!! Should not be here!" <<std::endl;
 

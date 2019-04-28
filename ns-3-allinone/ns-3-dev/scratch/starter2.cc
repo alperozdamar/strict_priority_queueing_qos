@@ -172,12 +172,8 @@ main (int argc, char *argv[])
   std::vector<TrafficClass*> tcs;
   readConfigurationFile(file_name, tcs);
 
-  
   std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
-
   
-  
-
 
   p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
   //p2p.SetDeviceAttribute ("DataRate", StringValue ("600bps"));
@@ -201,6 +197,7 @@ main (int argc, char *argv[])
   Ipv4InterfaceContainer interfaces1 = address.Assign (n_01);
   address.SetBase ("10.1.2.0", "255.255.255.0");
   Ipv4InterfaceContainer interfaces2 = address.Assign (n_12);
+  
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
@@ -228,7 +225,7 @@ main (int argc, char *argv[])
   UdpClientHelper echoClient2 (interfaces2.GetAddress (1), 10);
   echoClient2.SetAttribute ("MaxPackets", UintegerValue (1000));
   echoClient2.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
-  echoClient2.SetAttribute ("PacketSize", UintegerValue (1024));
+  echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
 
   ApplicationContainer clientApps2 = echoClient2.Install (nodes.Get (0));
   clientApps2.Start (Seconds (0.0));

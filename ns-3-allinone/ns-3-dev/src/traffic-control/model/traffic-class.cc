@@ -45,20 +45,6 @@ TrafficClass::match (Ptr<Packet> packet)
 {
   NS_LOG_FUNCTION (this << packet);
 
-  // auto iter = filters.begin ();
-
-  // for (; iter != filters.end (); iter++)
-  //   {
-  //     std::cout << *iter << " ";
-
-  //     if ((**iter).match (packet))
-  //       {
-
-  //         return true;
-  //       }
-  //   }
-  // return false;
-  // NS_LOG_FUNCTION(this<<packet);
   for (Filter *filter : filters)
     {
       if (filter->match (packet))

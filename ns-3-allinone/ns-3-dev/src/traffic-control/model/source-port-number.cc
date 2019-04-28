@@ -24,6 +24,8 @@ namespace ns3{
     SourcePortNumber::SourcePortNumber (uint32_t val)
     {
         value = val;
+        std::cout << " Constructor.SourcePortNumber.value:" << value << std::endl;
+
     }
 
 
@@ -35,21 +37,20 @@ namespace ns3{
     bool 
     SourcePortNumber::match (Ptr<Packet> p)
     {
-        NS_LOG_FUNCTION (this);
-	    Ptr<Packet> copyPacket = p -> Copy();
-	    Ipv4Header ipv4Header;
-	    UdpHeader udpHeader;
-	    copyPacket -> RemoveHeader(ipv4Header);
-	    copyPacket -> RemoveHeader(udpHeader);
-	    uint32_t sourcePort = udpHeader.GetSourcePort();
-
-        //33
-        std::cout << " SourcePortNumber.sourcePort:" << sourcePort << std::endl;
+       NS_LOG_FUNCTION (this);
+	   Ptr<Packet> copyPacket = p -> Copy();
+       PppHeader pppHeader;
+	   Ipv4Header ipv4Header;
+	   UdpHeader udpHeader;
+       copyPacket -> RemoveHeader(pppHeader);
+	   copyPacket -> RemoveHeader(ipv4Header);
+	   copyPacket -> RemoveHeader(udpHeader);
+	   uint32_t sourcePort = udpHeader.GetSourcePort();       
+                             
+       std::cout << " SourcePortNumber.sourcePort:" << sourcePort << std::endl;              
+       std::cout << " SourcePortNumber.value:" << value << std::endl;
         
-        //49153
-        std::cout << " SourcePortNumber.value:" << value << std::endl;
-
-	    return sourcePort == value;
+	   return sourcePort == value;
     }
 
 }

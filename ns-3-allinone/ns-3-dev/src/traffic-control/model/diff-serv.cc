@@ -78,10 +78,12 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::DoDequeue (void)
 {
   NS_LOG_FUNCTION (this);
-  auto iter = q_class.begin ();
-  for (; iter != q_class.end (); iter++)
+  for (TrafficClass *tc : q_class)
     {
-      return (**iter).Dequeue ();
+      if (tc->Peek () != 0)
+        {
+          return tc-> Dequeue ();
+        }
     }
   return 0;
 }
@@ -136,25 +138,6 @@ DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
 
   uint32_t match_index = -1;
 
-
-  // std::cout<<"Diff-Serv.q_class.size():"<< q_class.size() <<std::endl;
-
-  // for (uint32_t i=0; i< q_class.size();i++)
-  // {
-  //   if ((q_class[i]-> match (p)))
-  //   {
-  //      std::cout<<"Matched!"<<std::endl;
-  //     return match_index = i;
-  //   } 
-  //   //TODO Alper to check
-  //   else{      
-  //     std::cout<<"Not Matched!"<<std::endl;
-  //     std::cout<<"q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
-  //     if (q_class[i]->isDefault){
-  //       match_index = i ; // Check
-  //     }
-  //   }
-  // }
   return match_index;
 }
 
@@ -163,36 +146,7 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule ()
 {
   NS_LOG_FUNCTION (this);  
-  std::cout<<"Test.DiffServ.Schedule!"<<std::endl;
-
-  // // TrafficClass *tc;
-  // // if (tc ->priority_level ==1 && tc->IfEmpty()!= false)
-  // // {
-  // //   NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
-  // //   Ptr<Packet> p = tc -> Peek();
-  // //   return p; 
-  // // }
-
-  // Ptr<Packet> p;
-  // for(uint32_t priority= 0; priority < 100 ; priority++){   
-
-  //   std::cout<<"DiffServ.q_class.size():"<<  q_class.size()<<std::endl;
-
-  //   for (uint32_t i=0; i< q_class.size();i++)
-  //   {   
-  //       std::cout<<"DiffServ.priority_level:"<<  priority <<std::endl;
-  //       std::cout<<"DiffServ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
-  //       if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
-  //       {          
-  //         std::cout<<"DiffServ.priority_level MATCHED!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
-  //         Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
-  //         return p;
-  //       }
-  //   }
-  // }
-
-  //   std::cout<< "PROBLEM!! Should not be here!" <<std::endl;
-
+  std::cout<<"Test.DiffServ.Schedule!"<<std::endl;  
   return  0; 
 }
 
