@@ -34,32 +34,24 @@ SourceIpAddress::~SourceIpAddress ()
   NS_LOG_FUNCTION (this);
 }
 
-bool
-SourceIpAddress::match (Ptr<Packet> packet)
-{
-  NS_LOG_FUNCTION (this << packet);
+bool SourceIpAddress::match (Ptr<Packet> packet){
+    	// NS_LOG_FUNCTION (this << packet);
+    	Ptr<Packet> copy = packet->Copy ();
+    	PppHeader ppph;
+		Ipv4Header iph;
+		copy->RemoveHeader(ppph);
+		copy->RemoveHeader(iph);
 
-  
+    std::cout<<" value:" << value <<std::endl;
 
-  Ipv4Header ipv4Header;
-  packet->PeekHeader (ipv4Header);
-
-  Ipv4Address ipv4Address = ipv4Header.GetSource ();
-
-  std::cout << " SourceIpAddress::match.Ipv4Address:" << ipv4Address << std::endl;
-  //49153
-  std::cout << " SourceIpAddress.value:" << value << std::endl;
-
-  if (ipv4Address==value)
-    {
-      std::cout << " Matched Ipv4Address:" << ipv4Address << std::endl;
-      return true;
+		Ipv4Address Ipv4Address = iph.GetSource();
+		if(Ipv4Address.IsEqual(this->value)){
+			std::cout<<" Matched Ipv4Address:" << Ipv4Address <<std::endl;
+			return true;
+		}  else{
+			std::cout<<" Not Matched Ipv4Address:" << Ipv4Address <<std::endl;
+			return false;
+		}
     }
-  else
-    {
-      std::cout << " Not Matched Ipv4Address:" << ipv4Address << std::endl;
-      return false;
-    }
-}
 
 } // namespace ns3
