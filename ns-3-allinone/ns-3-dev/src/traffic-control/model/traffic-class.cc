@@ -78,7 +78,11 @@ TrafficClass::IfEmpty ()
 bool
 TrafficClass::Enqueue (Ptr<Packet> packet)
 {
+  //std::cout<<"Test.TrafficClass.Enqueue.m_queue.size:"<<m_queue.size()<<std::endl;
+
   m_queue.push (packet);
+  //std::cout<<"Test.TrafficClass.Enqueue.packet:"<<packet<<std::endl;
+  //std::cout<<"Test.TrafficClass.Enqueue.m_queue.size.AFTER.PUSH:"<<m_queue.size()<<std::endl;
 
   return true;
 }

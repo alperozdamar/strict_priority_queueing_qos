@@ -33,6 +33,9 @@ SPQ<Packet>::SPQ (QueueMode mode, std::vector<TrafficClass *> trafficClassList)
 {
   this-> m_mode = mode;
   this-> q_class = trafficClassList;
+
+  std::cout<< "SPQ.q_class.size: " << q_class.size() <<std::endl;
+
   NS_LOG_FUNCTION (this);
 }
 
@@ -48,12 +51,20 @@ bool
 SPQ<Packet>::Enqueue (Ptr<Packet> p)
 {
   NS_LOG_FUNCTION (this << p);
+
+  printf("Test.SPQ.Enqueue\n");
+
   //return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
   //return Classify(item);
   //if (tc-> Peek ()!= 0 && Classify(item)== 1)
    //if (Classify(p) != -1)
    // {
-      q_class[Classify(p)] -> Enqueue (p);
+
+      //return 1 in case of not matched!
+      u_int32_t index = Classify(p); //return the index of match!!
+      
+      std::cout<<"Test.SPQ.Enqueue.index.matched: "<<index<<std::endl;
+      q_class[index] -> Enqueue (p);
       return true;
    // } 
  // return false;
@@ -64,6 +75,7 @@ Ptr<Packet>
 SPQ<Packet>::Dequeue (void)
 {
   NS_LOG_FUNCTION (this);
+  printf("Test.SPQ.Dequeue\n");
 
   return  Schedule();
 
@@ -117,17 +129,60 @@ uint32_t
 SPQ<Packet>::Classify (Ptr<Packet> p)
 {
   NS_LOG_FUNCTION (this << p);
+  std::cout<<"Test.SPQ.Classify!"<<std::endl;
+  
+  uint32_t index = -1;
 
-  return DiffServ<Packet>::Classify(p);
+  std::cout<<"SPQ.q_class.size():"<< q_class.size() <<std::endl;
+
+  // We iterate here, 2 times. Because we have 2 Traffic Classes!
+  for (uint32_t i=0; i< q_class.size();i++)
+  {
+    if ((q_class[i]-> match (p)))
+    {
+       std::cout<<"SPQ.Matched!"<<std::endl;
+      return index = i;
+    } 
+    //NOT MATCHED case, we need to put this packet to default queue.
+    else{      
+      std::cout<<"SPQ.Not Matched!"<<std::endl;
+      std::cout<<"SPQ.q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
+      if (q_class[i]->isDefault){ //low i=1 or 0
+        std::cout<<"SPQ.Not Matched! Default Queue's index value is "<< i <<std::endl;
+        index = i ; // Check
+      }
+    }
+  }
+  return index;
+
+  //return DiffServ<Packet>::Classify(p);
 }
 
 template <typename Packet>
 Ptr<Packet> 
 SPQ<Packet>::Schedule ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION (this);   
+  std::cout<<"Test.SPQ.Schedule!"<<std::endl;
+  Ptr<Packet> p;
+  for(uint32_t priority= 0; priority < 100 ; priority++){   
+    //std::cout<<"SPQ.q_class.size():"<<  q_class.size()<<std::endl;
+    for (uint32_t i=0; i< q_class.size();i++)
+    {   
+       // std::cout<<"SPQ.priority_level:"<<  priority <<std::endl;
+       // std::cout<<"SPQ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
+        if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
+        {          
+          std::cout<<"SPQ.priority_level MATCHED!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
+          Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
+          return p;
+        }
+    }
+  }
 
-  return DiffServ<Packet>::Schedule();
+    std::cout<< "PROBLEM!! Should not be here!" <<std::endl;
+
+  return 0;
 }
 
 

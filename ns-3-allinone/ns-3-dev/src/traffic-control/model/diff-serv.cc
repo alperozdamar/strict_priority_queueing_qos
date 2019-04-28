@@ -131,25 +131,30 @@ template <typename Packet>
 uint32_t
 DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
 {
-
-  NS_LOG_FUNCTION (this);
+  std::cout<<"Test.DiffServ.Classify!"<<std::endl;
+  NS_LOG_FUNCTION (this << p);
 
   uint32_t match_index = -1;
 
-  for (uint32_t i=0; i< q_class.size();i++)
-  {
-    if ((q_class[i]-> match (p)))
-    {
-      NS_LOG_LOGIC ("Unable to classify packets of this match!");
-      return match_index = i;
-    } 
-    //TODO Alper to check
-    else{
-      if (q_class[i]->isDefault){
-        match_index = i ; // Check
-      }
-    }
-  }
+
+  // std::cout<<"Diff-Serv.q_class.size():"<< q_class.size() <<std::endl;
+
+  // for (uint32_t i=0; i< q_class.size();i++)
+  // {
+  //   if ((q_class[i]-> match (p)))
+  //   {
+  //      std::cout<<"Matched!"<<std::endl;
+  //     return match_index = i;
+  //   } 
+  //   //TODO Alper to check
+  //   else{      
+  //     std::cout<<"Not Matched!"<<std::endl;
+  //     std::cout<<"q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
+  //     if (q_class[i]->isDefault){
+  //       match_index = i ; // Check
+  //     }
+  //   }
+  // }
   return match_index;
 }
 
@@ -157,29 +162,38 @@ template <typename Packet>
 Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule ()
 {
-  NS_LOG_FUNCTION (this);
-  // TrafficClass *tc;
-  // if (tc ->priority_level ==1 && tc->IfEmpty()!= false)
-  // {
-  //   NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
-  //   Ptr<Packet> p = tc -> Peek();
-  //   return p; 
+  NS_LOG_FUNCTION (this);  
+  std::cout<<"Test.DiffServ.Schedule!"<<std::endl;
+
+  // // TrafficClass *tc;
+  // // if (tc ->priority_level ==1 && tc->IfEmpty()!= false)
+  // // {
+  // //   NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
+  // //   Ptr<Packet> p = tc -> Peek();
+  // //   return p; 
+  // // }
+
+  // Ptr<Packet> p;
+  // for(uint32_t priority= 0; priority < 100 ; priority++){   
+
+  //   std::cout<<"DiffServ.q_class.size():"<<  q_class.size()<<std::endl;
+
+  //   for (uint32_t i=0; i< q_class.size();i++)
+  //   {   
+  //       std::cout<<"DiffServ.priority_level:"<<  priority <<std::endl;
+  //       std::cout<<"DiffServ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
+  //       if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
+  //       {          
+  //         std::cout<<"DiffServ.priority_level MATCHED!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
+  //         Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
+  //         return p;
+  //       }
+  //   }
   // }
 
- Ptr<Packet> p = 0 ;
-  for(uint32_t priority= 0; priority < 100 ; priority++){    
-    for (uint32_t i=0; i< q_class.size();i++)
-    {
-        if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
-        {
-          NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
-          Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
-          return p;
-        }
-    }
-  }
+  //   std::cout<< "PROBLEM!! Should not be here!" <<std::endl;
 
-  return  p; 
+  return  0; 
 }
 
 template <typename Packet>

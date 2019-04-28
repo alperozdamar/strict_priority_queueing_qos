@@ -122,7 +122,7 @@ get_traffic_class(xmlNode * node, int level, std::vector<TrafficClass*> & result
   for(cur_node=node; cur_node; cur_node=cur_node->next){//Loop through traffic
     if(cur_node->type==XML_ELEMENT_NODE){
       printf("HELLO\n");
-      result.push_back(create_from_xml(cur_node->children));
+      result.push_back(create_from_xml(cur_node->children));            
     }
   }
 }
@@ -172,6 +172,8 @@ main (int argc, char *argv[])
   std::vector<TrafficClass*> tcs;
   readConfigurationFile(file_name, tcs);
 
+  
+  std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
 
   
   

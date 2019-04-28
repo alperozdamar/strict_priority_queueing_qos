@@ -39,10 +39,14 @@ SourceIpAddress::match (Ptr<Packet> packet)
 {
   NS_LOG_FUNCTION (this << packet);
 
+  
+
   Ipv4Header ipv4Header;
   packet->PeekHeader (ipv4Header);
 
   Ipv4Address Ipv4Address = ipv4Header.GetSource ();
+
+  std::cout << " SourceIpAddress::match.Ipv4Address:" << Ipv4Address << std::endl;
 
   if (Ipv4Address.IsEqual (value))
     {
