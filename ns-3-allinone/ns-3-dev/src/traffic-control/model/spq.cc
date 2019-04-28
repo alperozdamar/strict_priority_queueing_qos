@@ -45,21 +45,18 @@ SPQ<Packet>::~SPQ ()
 
 template <typename Packet>
 bool
-SPQ<Packet>::Enqueue (Ptr<Packet> item)
+SPQ<Packet>::Enqueue (Ptr<Packet> p)
 {
-  NS_LOG_FUNCTION (this << item);
+  NS_LOG_FUNCTION (this << p);
   //return DiffServ<Packet>::DoEnqueue (Queue<Packet>::Tail (), item)
   //return Classify(item);
- for (TrafficClass * tc : q_class)
-  {
-   // if (tc-> Peek ()!= 0 && Classify(item)== 1)
-   if (Classify(item)== 1)
-    {
-      tc -> Enqueue (item);
+  //if (tc-> Peek ()!= 0 && Classify(item)== 1)
+   //if (Classify(p) != -1)
+   // {
+      q_class[Classify(p)] -> Enqueue (p);
       return true;
-    }
-  }
-  return false;
+   // } 
+ // return false;
 }
 
 template <typename Packet>
@@ -67,11 +64,33 @@ Ptr<Packet>
 SPQ<Packet>::Dequeue (void)
 {
   NS_LOG_FUNCTION (this);
-  //Ptr<Packet> item = DiffServ<Packet>::DoDequeue (Queue<Packet>::Head());
 
-  Ptr<Packet> item = Schedule ();
-  NS_LOG_LOGIC("Popped " << item);
-  return item;
+  return  Schedule();
+
+  //for (int32_t i = 0; i < q_class[i]; i++){
+
+    // // method 1
+    //   if  ((q_class[i]-> priority_level == 1  && q_class[i]->IfEmpty() != true)){
+    //     queue_index_with_high_priority = i;
+    //     p = q_class -> Schedule();
+    //   } else if (Schedule()== 0) { 
+    //      p = q_class[i] -> Dequeue();
+    //   } else {
+    //     return 0;
+    //   }
+
+    // // method 2
+
+    //   while ((q_class[i]-> priority_level == 1  && q_class[i]->IfEmpty() != true)){
+    //     queue_index_with_high_priority = i;
+    //     return p = Schedule();
+    //   } 
+    //   if (q_class[queue_index_with_high_priority] ->IfEmpty == true) {
+         
+    //      p = q_class[i] -> Dequeue();
+    //   } else {
+    //     return 0;
+    //   
 }
 
 template <typename Packet>
@@ -98,19 +117,8 @@ uint32_t
 SPQ<Packet>::Classify (Ptr<Packet> p)
 {
   NS_LOG_FUNCTION (this << p);
-    //for (TrafficClass tc : *q_class)
-    //{
-      //TODP  Check with Alper 
-     TrafficClass tc;
-      if (!tc.match(p))
-        {
-          NS_LOG_LOGIC ("Unable to classify packets of this match!");
-          return -1;
-        }
-      return 1;
-    //} 
 
-  //return DiffServ<Packet>::Classify(item);
+  return DiffServ<Packet>::Classify(p);
 }
 
 template <typename Packet>

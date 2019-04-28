@@ -188,7 +188,7 @@ main (int argc, char *argv[])
   //Ptr<CustomSPQ<Packet>> custom = new CustomSPQ<Packet>(QueueMode::Packets, tcs);
   //Ptr<SPQ<Packet>> custom = new SPQ<Packet>(QueueMode::Packets, tcs);
     
-  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,tcs);  
+  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_PACKETS,tcs);  
   router_send->SetQueue(queue2);
 
   InternetStackHelper stack;

@@ -138,10 +138,16 @@ DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
 
   for (uint32_t i=0; i< q_class.size();i++)
   {
-    if (!(q_class[i]-> match (p)))
+    if ((q_class[i]-> match (p)))
     {
       NS_LOG_LOGIC ("Unable to classify packets of this match!");
       return match_index = i;
+    } 
+    //TODO Alper to check
+    else{
+      if (q_class[i]->isDefault){
+        match_index = i ; // Check
+      }
     }
   }
   return match_index;
@@ -152,8 +158,28 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule ()
 {
   NS_LOG_FUNCTION (this);
-  Ptr<Packet> item = DoDequeue (Head ());
-  return item;
+  // TrafficClass *tc;
+  // if (tc ->priority_level ==1 && tc->IfEmpty()!= false)
+  // {
+  //   NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
+  //   Ptr<Packet> p = tc -> Peek();
+  //   return p; 
+  // }
+
+ Ptr<Packet> p = 0 ;
+  for(uint32_t priority= 0; priority < 100 ; priority++){    
+    for (uint32_t i=0; i< q_class.size();i++)
+    {
+        if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY 
+        {
+          NS_LOG_LOGIC ("Queue with high priority is find - start dequeueing ...!!");
+          Ptr<Packet> p = q_class[i] -> Dequeue(); // Peek()
+          return p;
+        }
+    }
+  }
+
+  return  p; 
 }
 
 template <typename Packet>
