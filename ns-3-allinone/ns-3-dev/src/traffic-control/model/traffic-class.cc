@@ -65,10 +65,11 @@ bool
 TrafficClass::Enqueue (Ptr<Packet> packet)
 {
   //std::cout<<"Test.TrafficClass.Enqueue.m_queue.size:"<<m_queue.size()<<std::endl;
-
+  
+  bytes+=packet->GetSize();
   m_queue.push (packet);
   //std::cout<<"Test.TrafficClass.Enqueue.packet:"<<packet<<std::endl;
-  //std::cout<<"Test.TrafficClass.Enqueue.m_queue.size.AFTER.PUSH:"<<m_queue.size()<<std::endl;
+  std::cout<<"Test.TrafficClass.Enqueue.m_queue.size.AFTER.PUSH:"<<m_queue.size()<<std::endl;  
 
   return true;
 }
@@ -97,7 +98,7 @@ TrafficClass::Dequeue ()
   m_queue.pop ();
   bytes -= p-> GetSize ();
   NS_LOG_LOGIC ("Popped " << p);
-  NS_LOG_LOGIC ("Number packets " << m_queue.size ());
+  std::cout<< "Queue Size " << m_queue.size () << ",priority:"<< priority_level;
   NS_LOG_LOGIC ("Number bytes " << bytes);
 
   return p;

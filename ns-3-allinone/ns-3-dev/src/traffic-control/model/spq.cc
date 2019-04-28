@@ -116,9 +116,7 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
   std::cout << "Test.SPQ.Classify!" << std::endl;
 
   uint32_t index = -1;
-
-  std::cout << "SPQ.q_class.size():" << q_class.size () << std::endl;
-
+  
   // We iterate here, 2 times. Because we have 2 Traffic Classes!
   for (uint32_t i = 0; i < q_class.size (); i++)
     {
@@ -168,6 +166,12 @@ SPQ<Packet>::Schedule ()
   //   }
   // }
 
+  std::cout<<" q_class[0].size: "<< q_class[0]->m_queue.size() <<std::endl;
+  std::cout<<" q_class[1].size: "<< q_class[1]->m_queue.size() <<std::endl;
+
+  std::cout<<" q_class[0] is EMPTY: "<< q_class[0]->IsEmpty () <<std::endl;
+  std::cout<<" q_class[1] is EMPTY: "<< q_class[1]->IsEmpty () <<std::endl;
+
   if (q_class[0]->priority_level == 77 && q_class[0]->IsEmpty () != true) //HIGH PRIORITY
     {
       //std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
@@ -175,7 +179,6 @@ SPQ<Packet>::Schedule ()
       std::cout << "I am in High Priority !" << std::endl;
       p = q_class[0] -> Dequeue();
       std::cout<<"P is in 77 ----> "<< &p <<std::endl;
-
       return p;
     }
   else if ( q_class[0]->IsEmpty () == true)

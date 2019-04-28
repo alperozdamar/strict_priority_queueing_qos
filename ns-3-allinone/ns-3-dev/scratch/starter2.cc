@@ -167,7 +167,7 @@ main (int argc, char *argv[])
 
   PointToPointHelper p2p;
   p2p.SetDeviceAttribute ("DataRate", StringValue ("10Mbps"));
-  p2p.SetChannelAttribute ("Delay", StringValue ("0.1ms"));
+  p2p.SetChannelAttribute ("Delay", StringValue ("1ms"));
   NetDeviceContainer n_01 = p2p.Install (nodes.Get(0),nodes.Get(1));
   std::vector<TrafficClass*> tcs;
   readConfigurationFile(file_name, tcs);
@@ -177,7 +177,7 @@ main (int argc, char *argv[])
 
  // p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
   p2p.SetDeviceAttribute ("DataRate", StringValue ("500bps"));
-  p2p.SetChannelAttribute ("Delay", StringValue ("0.1ms"));
+  p2p.SetChannelAttribute ("Delay", StringValue ("1ms"));
 
   NetDeviceContainer n_12 = p2p.Install (nodes.Get(1),nodes.Get(2));
 
@@ -214,21 +214,21 @@ main (int argc, char *argv[])
   serverApps2.Stop (Seconds (1000.0));
 
   UdpClientHelper echoClient (interfaces2.GetAddress (1), 9);
-  echoClient.SetAttribute ("MaxPackets", UintegerValue (4000));
-  echoClient.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
+  echoClient.SetAttribute ("MaxPackets", UintegerValue (5));
+  echoClient.SetAttribute ("Interval", TimeValue (Seconds (0.01)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
   ApplicationContainer clientHigh = echoClient.Install (nodes.Get (0));
-  clientHigh.Start (Seconds (0.0));
+  clientHigh.Start (Seconds (10.0001));
   clientHigh.Stop (Seconds (1000.0));
 
   UdpClientHelper echoClient2 (interfaces2.GetAddress (1), 10);
-  echoClient2.SetAttribute ("MaxPackets", UintegerValue (4000));
-  echoClient2.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
-  echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
+  echoClient2.SetAttribute ("MaxPackets", UintegerValue (5));
+  echoClient2.SetAttribute ("Interval", TimeValue (Seconds (0.01)));
+  echoClient2.SetAttribute ("PacketSize", UintegerValue (1024));
 
   ApplicationContainer clientLow = echoClient2.Install (nodes.Get (0));
-  clientLow.Start (Seconds (0.0));
+  clientLow.Start (Seconds (10.000));
   clientLow.Stop (Seconds (1000.0));
 
   AnimationInterface anim ("spq_topology.xml");
