@@ -204,7 +204,7 @@ main (int argc, char *argv[])
   UdpServerHelper echoServer (9);
 
   ApplicationContainer serverApps = echoServer.Install (nodes.Get (2));
-  serverApps.Start (Seconds (0.0));
+  serverApps.Start (Seconds (10.0));
   serverApps.Stop (Seconds (10000.0));
 
   UdpServerHelper echoServer2 (10);
@@ -218,20 +218,20 @@ main (int argc, char *argv[])
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
-  ApplicationContainer clientApps = echoClient.Install (nodes.Get (0));
-  clientApps.Start (Seconds (0.0));
-  clientApps.Stop (Seconds (1000.0));
+  ApplicationContainer clientHigh = echoClient.Install (nodes.Get (0));
+  clientHigh.Start (Seconds (0.0));
+  clientHigh.Stop (Seconds (1000.0));
 
   UdpClientHelper echoClient2 (interfaces2.GetAddress (1), 10);
   echoClient2.SetAttribute ("MaxPackets", UintegerValue (1000));
   echoClient2.SetAttribute ("Interval", TimeValue (Seconds (1.0)));
   echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
 
-  ApplicationContainer clientApps2 = echoClient2.Install (nodes.Get (0));
-  clientApps2.Start (Seconds (0.0));
-  clientApps2.Stop (Seconds (1000.0));
+  ApplicationContainer clientLow = echoClient2.Install (nodes.Get (0));
+  clientLow.Start (Seconds (0.0));
+  clientLow.Stop (Seconds (1000.0));
 
-  AnimationInterface anim ("spq_anim.xml");
+  AnimationInterface anim ("spq_topology.xml");
 	anim.SetConstantPosition (nodes.Get(0), 0, 0);
   anim.SetConstantPosition (nodes.Get(1), 10, 10);
   anim.SetConstantPosition (nodes.Get(2), 20, 20);
