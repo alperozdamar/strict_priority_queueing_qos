@@ -30,7 +30,7 @@ public:
 
 
   // extra feature 
-  bool IfEmpty ();
+  bool IsEmpty ();
   Ptr<ns3::Packet> Remove();
   Ptr<ns3::Packet> Peek();
 

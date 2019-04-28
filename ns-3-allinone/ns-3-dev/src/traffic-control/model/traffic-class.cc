@@ -56,7 +56,7 @@ TrafficClass::match (Ptr<Packet> packet)
 }
 
 bool
-TrafficClass::IfEmpty ()
+TrafficClass::IsEmpty ()
 {
   return m_queue.empty ();
 }
@@ -89,6 +89,7 @@ TrafficClass::Dequeue ()
   if (m_queue.empty ())
     {
       NS_LOG_LOGIC ("Queue empty");
+      std::cout<<"Queue empty" <<std::endl;
       return 0;
     }
 
@@ -119,6 +120,8 @@ TrafficClass::Peek ()
   if (m_queue.empty ())
     {
       NS_LOG_LOGIC ("Queue empty");
+      std::cout<<"Queue empty" <<std::endl;
+    
       return 0;
     }
 
