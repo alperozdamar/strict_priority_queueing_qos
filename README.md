@@ -36,27 +36,29 @@ The base class will be a subclass of ns-3::Queue, closely related ns-3::DropTail
 The base class should follow the requirements laid out in the UML diagram in Figure 1.
 Here is a short description detailing the role of some of classes in the figure and their members.
 
-• DiffServ:
-– m mode: The QueueMode specifies whether service is in byte mode or packet mode.
-– q class: The vector (array) of TrafficClass pointers. 
-- setMode()/getMode(): the accessor and modifier for private variable m mode.
-– Schedule(): Returns a packet to transmit.
-– Classify(p): Takes a packet and returns an integer.
+#### DiffServ:
+m mode: The QueueMode specifies whether service is in byte mode or packet mode.
+q class: The vector (array) of TrafficClass pointers. 
+setMode()/getMode(): the accessor and modifier for private variable m mode.
+Schedule(): Returns a packet to transmit.
+Classify(p): Takes a packet and returns an integer.
 
-• TrafficClass - Defines the characteristics of a queue.
-– bytes: the count of bytes in the queue.
-– packets: the count of packets in the queue.
-– maxPackets: the maximum number of packets allowed in the queue.
-– maxBytes: the maximum number of bytes allowed in the queue.
-– weight: applicable if the QoS mechanism uses weight.
-– priority level: applicable if the QoS mechanism uses priority level.
-– filters: A collection of conditions as Filters, any of which should match in order to trigger match.
+#### TrafficClass - Defines the characteristics of a queue.
+bytes: the count of bytes in the queue.
+packets: the count of packets in the queue.
+maxPackets: the maximum number of packets allowed in the queue.
+maxBytes: the maximum number of bytes allowed in the queue.
+weight: applicable if the QoS mechanism uses weight.
+priority level: applicable if the QoS mechanism uses priority level.
+filters: A collection of conditions as Filters, any of which should match in order to trigger match.
 
-• Filter 
-- A collection of conditions as FilterElements, all of which should match in order to trigger match.
+#### Filter 
+A collection of conditions as FilterElements, all of which should match in order to trigger match.
 Refer to Figure 2 for an example.
-– elements - the array of pointers to FilterElement.
-• FilterElement - a base class for a primitive condition to match on. You should write one subclass for every
+elements - the array of pointers to FilterElement.
+
+#### FilterElement 
+a base class for a primitive condition to match on. You should write one subclass for every
 seven (light purple) boxes in the design diagram. Refer to Figure 2 for an example.  
 
 ![Image](Fiq1.png)
@@ -76,6 +78,7 @@ Extra Credit: Implement a parser for your config file for SPQ, so that the confi
 for Cisco Catalyst 3750 switch.
 
 ![Image](Fig2.png)
+
 Figure 2: An example of how users of your base class will be able to match any boolean condition given the right
 set of Filters and FilterElements.
 
@@ -93,6 +96,7 @@ For your DRR verification, you should initialize three queues with quanta ratio 
 bulk data transfer applications, all starting at the same time.
 For both simulations your demonstration should include a plot of throughput vs. time for all applications. An
 example of throughput vs. time plot is provided in Figure 3.
+
 ![Image](Fig3.png)
 
 Figure 3:In this scenario, the sender starts sending low priority traffic at time 0s. At time 12s, the sender sends
