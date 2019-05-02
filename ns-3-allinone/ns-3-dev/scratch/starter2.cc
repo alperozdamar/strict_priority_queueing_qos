@@ -8,8 +8,6 @@
 #include <vector>
 #include "ns3/netanim-module.h"
 #include "ns3/config-store-module.h"
-
-
 //#include "libxml/tree.h"
 #include <libxml/tree.h>
 #include <libxml/parser.h> 
@@ -23,7 +21,7 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("FirstScriptExample");
+NS_LOG_COMPONENT_DEFINE ("Quality of Service");
 
 static Filter* 
 create_filter(xmlNode * node){
@@ -98,11 +96,6 @@ create_from_xml(xmlNode * node){
         xmlNode *cur_filter = nullptr;
         for(cur_filter=cur_node->children; cur_filter; cur_filter=cur_filter->next){
           Filter* filter = create_filter(cur_filter);
-          
-         //test.LOG... 
-         for(uint32_t i=0;i<filter->elements.size();i++){
-          std::cout<<"filter element[i]: "<<filter->elements[i]<<std::endl;
-         }
 
           if(filter->elements.size()!=0){            
             std::cout<<"filter elements: "<<filter->elements.size()<<std::endl;
@@ -119,9 +112,8 @@ create_from_xml(xmlNode * node){
 static void
 get_traffic_class(xmlNode * node, int level, std::vector<TrafficClass*> & result){
   xmlNode *cur_node = nullptr;
-  for(cur_node=node; cur_node; cur_node=cur_node->next){//Loop through traffic
+  for(cur_node=node; cur_node; cur_node=cur_node->next){
     if(cur_node->type==XML_ELEMENT_NODE){
-      printf("HELLO\n");
       result.push_back(create_from_xml(cur_node->children));            
     }
   }
@@ -153,10 +145,6 @@ int
 main (int argc, char *argv[])
 {
   std::string file_name = "";
-  //
-  // Allow the user to override any of the defaults and the above Bind () at
-  // run-time, viacommand-line arguments
-  //
   CommandLine cmd;
   cmd.AddValue("filename","Name of the configuration file", file_name);
   cmd.Parse (argc, argv);
@@ -171,8 +159,7 @@ main (int argc, char *argv[])
   NetDeviceContainer n_01 = p2p.Install (nodes.Get(0),nodes.Get(1));
   std::vector<TrafficClass*> tcs;
   readConfigurationFile(file_name, tcs);
-
-  std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
+ // std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
   
 
  // p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
@@ -182,9 +169,6 @@ main (int argc, char *argv[])
   NetDeviceContainer n_12 = p2p.Install (nodes.Get(1),nodes.Get(2));
 
   Ptr<PointToPointNetDevice> router_send = DynamicCast<PointToPointNetDevice>(n_12.Get(0));
-
-  //Ptr<CustomSPQ<Packet>> custom = new CustomSPQ<Packet>(QueueMode::Packets, tcs);
-  //Ptr<SPQ<Packet>> custom = new SPQ<Packet>(QueueMode::Packets, tcs);
     
   Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_PACKETS,tcs);  
   router_send->SetQueue(queue2);
@@ -200,7 +184,6 @@ main (int argc, char *argv[])
   
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables();
-
   UdpServerHelper echoServer (9);
 
   ApplicationContainer serverApps = echoServer.Install (nodes.Get (2));
@@ -208,28 +191,30 @@ main (int argc, char *argv[])
   serverApps.Stop (Seconds (1000.0));
 
   UdpServerHelper echoServer2 (10);
-
   ApplicationContainer serverApps2 = echoServer2.Install (nodes.Get (2));
   serverApps2.Start (Seconds (0.0));
   serverApps2.Stop (Seconds (1000.0));
 
+
+  //1st sender wıll have source port 49153
+  //2nd sender wıll have source port 49154
   UdpClientHelper echoClient (interfaces2.GetAddress (1), 9);
-  echoClient.SetAttribute ("MaxPackets", UintegerValue (5));
+  echoClient.SetAttribute ("MaxPackets", UintegerValue (1000));
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (0.01)));
   echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
-  ApplicationContainer clientHigh = echoClient.Install (nodes.Get (0));
-  clientHigh.Start (Seconds (10.0001));
-  clientHigh.Stop (Seconds (1000.0));
+  ApplicationContainer client1 = echoClient.Install (nodes.Get (0));
+  client1.Start (Seconds (10.000));
+  client1.Stop (Seconds (1000.0));
 
   UdpClientHelper echoClient2 (interfaces2.GetAddress (1), 10);
-  echoClient2.SetAttribute ("MaxPackets", UintegerValue (5));
+  echoClient2.SetAttribute ("MaxPackets", UintegerValue (1000));
   echoClient2.SetAttribute ("Interval", TimeValue (Seconds (0.01)));
-  echoClient2.SetAttribute ("PacketSize", UintegerValue (1024));
+  echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
 
-  ApplicationContainer clientLow = echoClient2.Install (nodes.Get (0));
-  clientLow.Start (Seconds (10.000));
-  clientLow.Stop (Seconds (1000.0));
+  ApplicationContainer client2 = echoClient2.Install (nodes.Get (0));
+  client2.Start (Seconds (900.101));
+  client2.Stop (Seconds (2000.0));
 
   AnimationInterface anim ("spq_topology.xml");
 	anim.SetConstantPosition (nodes.Get(0), 0, 0);

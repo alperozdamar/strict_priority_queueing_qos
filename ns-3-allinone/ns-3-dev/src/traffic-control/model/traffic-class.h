@@ -36,6 +36,7 @@ public:
 
   uint32_t priority_level; // TODO should be private 
   bool isDefault;        //only one traffic class should have isDefault value=1
+  std::queue<Ptr<Packet>> m_queue;  // TODO should be private 
 
 private:
   uint32_t bytes;
@@ -46,7 +47,7 @@ private:
  
   
   //Ptr<ns3::Queue<ns3::Packet>> m_queue;
-  std::queue<Ptr<Packet>> m_queue;  
+  //std::queue<Ptr<Packet>> m_queue;  
 };
 
 } // namespace ns3

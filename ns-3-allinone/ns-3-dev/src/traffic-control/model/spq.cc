@@ -82,7 +82,7 @@ SPQ<Packet>::Dequeue (void)
   //   }
   p = Schedule ();
 
-  std::cout<<"Schedule p in final Dequeue" << &p << std::endl;
+  std::cout << "Schedule p in final Dequeue" << &p << std::endl;
 
   //DiffServ<Packet>::Dequeue ();
 
@@ -116,7 +116,7 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
   std::cout << "Test.SPQ.Classify!" << std::endl;
 
   uint32_t index = -1;
-  
+
   // We iterate here, 2 times. Because we have 2 Traffic Classes!
   for (uint32_t i = 0; i < q_class.size (); i++)
     {
@@ -148,53 +148,57 @@ Ptr<Packet>
 SPQ<Packet>::Schedule ()
 {
   NS_LOG_FUNCTION (this);
-  std::cout << "Test.SPQ.Schedule!" << std::endl;
   Ptr<Packet> p;
-  // for(uint32_t priority= 0; priority < 100 ; priority++){
-  //   //std::cout<<"SPQ.q_class.size():"<<  q_class.size()<<std::endl;
-  //   for (uint32_t i=0; i< q_class.size();i++)
-  //   {
-  //      // std::cout<<"SPQ.priority_level:"<<  priority <<std::endl;
-  //      // std::cout<<"SPQ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
-  //       if  (q_class[i]-> priority_level == priority  && q_class[i]->IfEmpty() != true)//HIGH PRIORITY
-  //       {
-  //         std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
-  //         Ptr<Packet> p = q_class[i] -> Peek(); // Dequeue()
-  //         q_class[i] -> Dequeue();
-  //         return p;
-  //       }
-  //   }
-  // }
-
-  std::cout<<" q_class[0].size: "<< q_class[0]->m_queue.size() <<std::endl;
-  std::cout<<" q_class[1].size: "<< q_class[1]->m_queue.size() <<std::endl;
-
-  std::cout<<" q_class[0] is EMPTY: "<< q_class[0]->IsEmpty () <<std::endl;
-  std::cout<<" q_class[1] is EMPTY: "<< q_class[1]->IsEmpty () <<std::endl;
-
-  if (q_class[0]->priority_level == 77 && q_class[0]->IsEmpty () != true) //HIGH PRIORITY
+  for (uint32_t priority = 0; priority < 100; priority++)
     {
-      //std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
-      //p = q_class[0]-> Peek (); // Dequeue()
-      std::cout << "I am in High Priority !" << std::endl;
-      p = q_class[0] -> Dequeue();
-      std::cout<<"P is in 77 ----> "<< &p <<std::endl;
-      return p;
+      //std::cout<<"SPQ.q_class.size():"<<  q_class.size()<<std::endl;
+      for (uint32_t i = 0; i < q_class.size (); i++)
+        {
+          // std::cout<<"SPQ.priority_level:"<<  priority <<std::endl;
+          // std::cout<<"SPQ.q_class[i]->m_queue.size():"<<  q_class[i]->m_queue.size() <<std::endl;
+          if (q_class[i]->priority_level == priority &&
+              q_class[i]->IsEmpty () != true) //HIGH PRIORITY
+            {
+              std::cout << "SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:" << priority
+                        << std::endl;
+              //Ptr<Packet> p = q_class[i]->Peek (); // Dequeue()
+              p = q_class[i]->Dequeue ();
+              return p;
+            }
+        }
     }
-  else if ( q_class[0]->IsEmpty () == true)
-    {
 
-      std::cout << "I am in LOW Priority !" << std::endl;
-      //p = q_class[1]-> Peek ();
-      p = q_class[1] -> Dequeue();
-      std::cout<<"P is in 99 ---->  "<< &p <<std::endl;
-      
-      return p;
-    }
-  else {
-    std::cout << "PROBLEM!! Should not be here!" << std::endl;
     return 0;
-  }
+
+  //   std::cout<<" q_class[0].size: "<< q_class[0]->m_queue.size() <<std::endl;
+  //   std::cout<<" q_class[1].size: "<< q_class[1]->m_queue.size() <<std::endl;
+
+  //   std::cout<<" q_class[0] is EMPTY: "<< q_class[0]->IsEmpty () <<std::endl;
+  //   std::cout<<" q_class[1] is EMPTY: "<< q_class[1]->IsEmpty () <<std::endl;
+
+  //   if (q_class[0]->priority_level == 77 && q_class[0]->IsEmpty () != true) //HIGH PRIORITY
+  //     {
+  //       //std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
+  //       //p = q_class[0]-> Peek (); // Dequeue()
+  //       std::cout << "I am in High Priority !" << std::endl;
+  //       p = q_class[0] -> Dequeue();
+  //       std::cout<<"P is in 77 ----> "<< &p <<std::endl;
+  //       return p;
+  //     }
+  //   else if ( q_class[0]->IsEmpty () == true)
+  //     {
+
+  //       std::cout << "I am in LOW Priority !" << std::endl;
+  //       //p = q_class[1]-> Peek ();
+  //       p = q_class[1] -> Dequeue();
+  //       std::cout<<"P is in 99 ---->  "<< &p <<std::endl;
+
+  //       return p;
+  //     }
+  //   else {
+  //     std::cout << "PROBLEM!! Should not be here!" << std::endl;
+  //     return 0;
+  //   }
 }
 
 template <typename Packet>
