@@ -36,7 +36,7 @@ The base class will be a subclass of ns-3::Queue, closely related ns-3::DropTail
 The base class should follow the requirements laid out in the UML diagram in Figure 1.
 Here is a short description detailing the role of some of classes in the figure and their members.
 
-#### DiffServ:
+#### DiffServ - Middle service for priority
 m mode: The QueueMode specifies whether service is in byte mode or packet mode.
 q class: The vector (array) of TrafficClass pointers. 
 setMode()/getMode(): the accessor and modifier for private variable m mode.
@@ -61,7 +61,7 @@ elements - the array of pointers to FilterElement.
 a base class for a primitive condition to match on. You should write one subclass for every
 seven (light purple) boxes in the design diagram. Refer to Figure 2 for an example.  
 
-![Image](Fiq1.png)
+![Image](Fig1.png)
 
 Figure 1: Base Class Design
   
@@ -156,17 +156,14 @@ You should see following message:
    
 4. Additional Setup:
 
-Install cMake version: 3.10.02, mercurial, haveged for random data generation and zlib library for compression
+Install cMake version: 3.10.02, mercurial
  
  ```linux
  $ sudo apt install cmake    
  $ sudo apt-get install mercurial
  $ sudo apt-get install libpng-dev
  $ python -m pip install -U pip
- $ sudo apt-get install haveged
  ```
-
-Further setup for zlib is required.
      
 - run the following commands:
       
@@ -218,7 +215,7 @@ If any problem occurred and Package gconf2 is not installed, run the following c
   
 c) IDE For C++
       
-Go to Visual Studio web site and download Visual studio for debian. 
+Brows Visual Studio web site and download Visual studio for debian. 
   
   ```linux        
   $sudo dpkg -i code_1.31.1-1549938243_amd64.deb
@@ -235,7 +232,7 @@ The project was built using WAF tool.  In order to build the project run this co
  ``` 
 
 ## Project Testing
-For testing the different feature implemented on the project the following filters got activated and the generated result were tested. 
+For testing the different features were implemented for filtering in the project. The following filters got activated and the generated result were tested in wireshark application. 
 Source/Destination IPaddress
 Source/Destnation mask
 Source/Destination port number
@@ -246,7 +243,7 @@ Protocol Number
 Output folder is located in the following directory 
 
 ```linux 
-$ cd workspace/Strict_Priority_Queueing_SPQ_Qos_Implementation/ns-3-allinone/output
+$ cd workspace/Strict_Priority_Queueing_SPQ_Qos_Implementation/output
 ```
 
 
