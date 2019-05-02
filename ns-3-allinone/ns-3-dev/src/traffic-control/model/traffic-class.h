@@ -30,9 +30,13 @@ public:
 
 
   // extra feature 
-  bool IfEmpty ();
+  bool IsEmpty ();
   Ptr<ns3::Packet> Remove();
   Ptr<ns3::Packet> Peek();
+
+  uint32_t priority_level; // TODO should be private 
+  bool isDefault;        //only one traffic class should have isDefault value=1
+  std::queue<Ptr<Packet>> m_queue;  // TODO should be private 
 
 private:
   uint32_t bytes;
@@ -40,10 +44,10 @@ private:
   uint32_t maxPackets;    //related SPQ
   uint32_t maxBytes;      //related DDR
   double_t weight;        //related DDR
-  uint32_t priority_level;  
-  bool isDefault;        //only one traffic class should have isDefault value=1
+ 
+  
   //Ptr<ns3::Queue<ns3::Packet>> m_queue;
-  std::queue<Ptr<Packet>> m_queue;  
+  //std::queue<Ptr<Packet>> m_queue;  
 };
 
 } // namespace ns3

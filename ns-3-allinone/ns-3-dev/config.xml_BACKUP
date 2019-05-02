@@ -4,11 +4,14 @@
         <maxPackets value="1000"/>
         <maxBytes value="0"/>
         <weight value="0"/>
-        <priority_level value="77"/>
-        <isDefault value="0"/>
+        <priority_level value="1"/>
+        <isDefault value="1"/>
         <filters>
             <filter>
+                <source_address value="10.1.1.1"/>
                 <source_port value="49153"/>
+                <destination_address value="10.1.2.2"/>
+                <destination_port value="9"/>
             </filter>
         </filters>
     </traffic>
@@ -16,11 +19,14 @@
         <maxPackets value="1000"/>
         <maxBytes value="0"/>
         <weight value="0"/>
-        <priority_level value="99"/>
-        <isDefault value="1"/>
+        <priority_level value="2"/>
+        <isDefault value="0"/>
         <filters>
             <filter>
+                <source_address value="10.1.1.1"/>
                 <source_port value="49154"/>
+                <destination_address value="10.1.2.2"/>
+                <destination_port value="10"/>
             </filter>
         </filters>
     </traffic>

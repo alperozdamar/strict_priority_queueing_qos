@@ -8,8 +8,6 @@
 
 
 namespace ns3 {
-
-
     class SourcePortNumber: public FilterElement {
     public:
         

@@ -78,10 +78,12 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::DoDequeue (void)
 {
   NS_LOG_FUNCTION (this);
-  auto iter = q_class.begin ();
-  for (; iter != q_class.end (); iter++)
+  for (TrafficClass *tc : q_class)
     {
-      return (**iter).Dequeue ();
+      if (tc->Peek () != 0)
+        {
+          return tc-> Dequeue ();
+        }
     }
   return 0;
 }
@@ -131,19 +133,11 @@ template <typename Packet>
 uint32_t
 DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
 {
-
-  NS_LOG_FUNCTION (this);
+  std::cout<<"Test.DiffServ.Classify!"<<std::endl;
+  NS_LOG_FUNCTION (this << p);
 
   uint32_t match_index = -1;
 
-  for (uint32_t i=0; i< q_class.size();i++)
-  {
-    if (!(q_class[i]-> match (p)))
-    {
-      NS_LOG_LOGIC ("Unable to classify packets of this match!");
-      return match_index = i;
-    }
-  }
   return match_index;
 }
 
@@ -151,9 +145,9 @@ template <typename Packet>
 Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule ()
 {
-  NS_LOG_FUNCTION (this);
-  Ptr<Packet> item = DoDequeue (Head ());
-  return item;
+  NS_LOG_FUNCTION (this);  
+  std::cout<<"Test.DiffServ.Schedule!"<<std::endl;  
+  return  0; 
 }
 
 template <typename Packet>

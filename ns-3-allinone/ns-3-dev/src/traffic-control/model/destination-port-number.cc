@@ -39,10 +39,16 @@ namespace ns3{
 	    Ptr<Packet> copyPacket = p -> Copy();
 	    Ipv4Header ipv4Header;
 	    UdpHeader udpHeader;
+
+        PppHeader pppHeader;
+        copyPacket -> RemoveHeader(pppHeader);
 	    copyPacket -> RemoveHeader(ipv4Header);
 	    copyPacket -> RemoveHeader(udpHeader);
-	    uint32_t destinationPort = udpHeader.GetDestinationPort();
-	
+	    uint32_t destinationPort = (uint32_t)udpHeader.GetDestinationPort();
+	                               
+        //std::cout << " DestinationPortNumber.destinationPort:" << destinationPort << std::endl;
+        //std::cout << " DestinationPortNumber.value:" << value << std::endl;
+
 	    return destinationPort == value;
     }
 

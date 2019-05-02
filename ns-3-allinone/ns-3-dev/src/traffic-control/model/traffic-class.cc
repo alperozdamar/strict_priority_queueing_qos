@@ -45,20 +45,6 @@ TrafficClass::match (Ptr<Packet> packet)
 {
   NS_LOG_FUNCTION (this << packet);
 
-  // auto iter = filters.begin ();
-
-  // for (; iter != filters.end (); iter++)
-  //   {
-  //     std::cout << *iter << " ";
-
-  //     if ((**iter).match (packet))
-  //       {
-
-  //         return true;
-  //       }
-  //   }
-  // return false;
-  // NS_LOG_FUNCTION(this<<packet);
   for (Filter *filter : filters)
     {
       if (filter->match (packet))
@@ -70,7 +56,7 @@ TrafficClass::match (Ptr<Packet> packet)
 }
 
 bool
-TrafficClass::IfEmpty ()
+TrafficClass::IsEmpty ()
 {
   return m_queue.empty ();
 }
@@ -78,7 +64,12 @@ TrafficClass::IfEmpty ()
 bool
 TrafficClass::Enqueue (Ptr<Packet> packet)
 {
+  //std::cout<<"Test.TrafficClass.Enqueue.m_queue.size:"<<m_queue.size()<<std::endl;
+  
+  bytes+=packet->GetSize();
   m_queue.push (packet);
+  //std::cout<<"Test.TrafficClass.Enqueue.packet:"<<packet<<std::endl;
+  std::cout<<"Test.TrafficClass.Enqueue.m_queue.size.AFTER.PUSH:"<<m_queue.size()<<std::endl;  
 
   return true;
 }
@@ -99,6 +90,7 @@ TrafficClass::Dequeue ()
   if (m_queue.empty ())
     {
       NS_LOG_LOGIC ("Queue empty");
+      std::cout<<"Queue empty" <<std::endl;
       return 0;
     }
 
@@ -106,7 +98,7 @@ TrafficClass::Dequeue ()
   m_queue.pop ();
   bytes -= p-> GetSize ();
   NS_LOG_LOGIC ("Popped " << p);
-  NS_LOG_LOGIC ("Number packets " << m_queue.size ());
+  std::cout<< "Queue Size " << m_queue.size () << ",priority:"<< priority_level;
   NS_LOG_LOGIC ("Number bytes " << bytes);
 
   return p;
@@ -129,6 +121,8 @@ TrafficClass::Peek ()
   if (m_queue.empty ())
     {
       NS_LOG_LOGIC ("Queue empty");
+      std::cout<<"Queue empty" <<std::endl;
+    
       return 0;
     }
 
