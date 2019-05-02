@@ -35,9 +35,9 @@ SourceIpAddress::~SourceIpAddress ()
 }
 
 bool SourceIpAddress::match (Ptr<Packet> packet){
-    	// NS_LOG_FUNCTION (this << packet);
-    	Ptr<Packet> copy = packet->Copy ();
-    	PppHeader ppph;
+    NS_LOG_FUNCTION (this << packet);
+    Ptr<Packet> copy = packet->Copy ();
+    PppHeader ppph;
 		Ipv4Header iph;
 		copy->RemoveHeader(ppph);
 		copy->RemoveHeader(iph);

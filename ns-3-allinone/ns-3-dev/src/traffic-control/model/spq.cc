@@ -14,7 +14,7 @@ SPQ<Packet>::GetTypeId (void)
       TypeId (("ns3::SPQ<" + GetTypeParamName<SPQ<Packet>> () + ">").c_str ())
           .SetParent<DiffServ<Packet>> ()
           .SetGroupName ("trafficControl")
-          .template AddConstructor<SPQ<Packet>> () //)//TODO: I may need to add 2 parameters
+          .template AddConstructor<SPQ<Packet>> () 
       ;
   return tid;
 }
@@ -31,9 +31,7 @@ SPQ<Packet>::SPQ (QueueMode mode, std::vector<TrafficClass *> trafficClassList)
 {
   this->m_mode = mode;
   this->q_class = trafficClassList;
-
   std::cout << "SPQ.q_class.size: " << q_class.size () << std::endl;
-
   NS_LOG_FUNCTION (this);
 }
 
@@ -50,9 +48,7 @@ SPQ<Packet>::Enqueue (Ptr<Packet> p)
   NS_LOG_FUNCTION (this << p);
 
   printf ("Test.SPQ.Enqueue\n");
-  //return 1 in case of not matched!
-  u_int32_t index = Classify (p); //return the index of match!!
-
+  u_int32_t index = Classify (p);
   std::cout << "Test.SPQ.Enqueue.index.matched: " << index
             << ",priority:" << q_class[index]->priority_level << std::endl;
   q_class[index]->Enqueue (p);
@@ -66,26 +62,8 @@ SPQ<Packet>::Dequeue (void)
   NS_LOG_FUNCTION (this);
   printf ("Test.SPQ.Dequeue\n");
   Ptr<Packet> p;
-
-  // if (!(q_class[0]->IfEmpty ()))
-  //   {
-  //     p = Schedule ();
-  //     q_class[0]->Dequeue ();
-  //   }
-  // else
-  //   {
-  //     if (q_class[0]->IfEmpty ())
-  //       {
-  //         q_class[1]->Dequeue ();
-  //         //DiffServ<Packet>::Dequeue();
-  //       }
-  //   }
   p = Schedule ();
-
   std::cout << "Schedule p in final Dequeue" << &p << std::endl;
-
-  //DiffServ<Packet>::Dequeue ();
-
   return p;
 }
 
@@ -117,7 +95,6 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
 
   uint32_t index = -1;
 
-  // We iterate here, 2 times. Because we have 2 Traffic Classes!
   for (uint32_t i = 0; i < q_class.size (); i++)
     {
       if ((q_class[i]->match (p)))
@@ -125,22 +102,19 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
           std::cout << "SPQ.Matched!, for priority:" << q_class[i]->priority_level << std::endl;
           return index = i;
         }
-      //NOT MATCHED case, we need to put this packet to default queue.
       else
         {
           //std::cout<<"SPQ.Not Matched!"<<std::endl;
           //std::cout<<"SPQ.q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
           if (q_class[i]->isDefault)
-            { //low i=1 or 0
+            { 
               std::cout << "SPQ.Not Matched! Putting to Default Queue. Index value is " << i
                         << ", for priority:" << q_class[i]->priority_level << std::endl;
-              index = i; // Check
+              index = i; 
             }
         }
     }
   return index;
-
-  //return DiffServ<Packet>::Classify(p);
 }
 
 template <typename Packet>
@@ -161,53 +135,18 @@ SPQ<Packet>::Schedule ()
             {
               std::cout << "SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:" << priority
                         << std::endl;
-              //Ptr<Packet> p = q_class[i]->Peek (); // Dequeue()
               p = q_class[i]->Dequeue ();
               return p;
             }
         }
     }
-
     return 0;
-
-  //   std::cout<<" q_class[0].size: "<< q_class[0]->m_queue.size() <<std::endl;
-  //   std::cout<<" q_class[1].size: "<< q_class[1]->m_queue.size() <<std::endl;
-
-  //   std::cout<<" q_class[0] is EMPTY: "<< q_class[0]->IsEmpty () <<std::endl;
-  //   std::cout<<" q_class[1] is EMPTY: "<< q_class[1]->IsEmpty () <<std::endl;
-
-  //   if (q_class[0]->priority_level == 77 && q_class[0]->IsEmpty () != true) //HIGH PRIORITY
-  //     {
-  //       //std::cout<<"SPQ.priority_level is SAME!QUEUE is NOT EMPTY!priority:"<<  priority <<std::endl;
-  //       //p = q_class[0]-> Peek (); // Dequeue()
-  //       std::cout << "I am in High Priority !" << std::endl;
-  //       p = q_class[0] -> Dequeue();
-  //       std::cout<<"P is in 77 ----> "<< &p <<std::endl;
-  //       return p;
-  //     }
-  //   else if ( q_class[0]->IsEmpty () == true)
-  //     {
-
-  //       std::cout << "I am in LOW Priority !" << std::endl;
-  //       //p = q_class[1]-> Peek ();
-  //       p = q_class[1] -> Dequeue();
-  //       std::cout<<"P is in 99 ---->  "<< &p <<std::endl;
-
-  //       return p;
-  //     }
-  //   else {
-  //     std::cout << "PROBLEM!! Should not be here!" << std::endl;
-  //     return 0;
-  //   }
 }
 
 template <typename Packet>
-//std::vector<TrafficClass*>
 bool
 SPQ<Packet>::AddTrafficClass (TrafficClass *trafficClass)
 {
-  //std::vector<Filter*> filterList;
-  //TrafficClass* trafficClass = new TrafficClass(5, 0, true,filterList); //TODO Check for this input
   std::vector<TrafficClass *> trafficClassList;
   trafficClassList.push_back (trafficClass);
   this->q_class = trafficClassList;
