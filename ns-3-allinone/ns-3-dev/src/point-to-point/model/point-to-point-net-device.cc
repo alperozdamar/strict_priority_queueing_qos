@@ -29,6 +29,7 @@
 #include "point-to-point-channel.h"
 #include "ppp-header.h"
 
+
 namespace ns3 {
 
 NS_LOG_COMPONENT_DEFINE ("PointToPointNetDevice");
@@ -317,6 +318,8 @@ PointToPointNetDevice::Attach (Ptr<PointToPointChannel> ch)
 void
 PointToPointNetDevice::SetQueue (Ptr<Queue<Packet> > q)
 {
+
+
   NS_LOG_FUNCTION (this << q);
   m_queue = q;
 }
@@ -333,6 +336,15 @@ PointToPointNetDevice::Receive (Ptr<Packet> packet)
 {
   NS_LOG_FUNCTION (this << packet);
   uint16_t protocol = 0;
+
+  if(this->dequeueQosFlag){
+
+
+
+
+  }
+
+
 
   if (m_receiveErrorModel && m_receiveErrorModel->IsCorrupt (packet) ) 
     {
@@ -511,7 +523,28 @@ PointToPointNetDevice::Send (
 {
   NS_LOG_FUNCTION (this << packet << dest << protocolNumber);
   NS_LOG_LOGIC ("p=" << packet << ", dest=" << &dest);
-  NS_LOG_LOGIC ("UID is " << packet->GetUid ());
+  NS_LOG_LOGIC ("UID is " << packet->GetUid ());  
+
+
+  if(this -> dequeueQosFlag){   
+    std::cout<<"Send.alper.DequeueQosFlag : "<< this -> dequeueQosFlag << ".";
+  }
+
+  if(this -> enqueueQosFlag){   
+    std::cout<<"Send.alper.enqueueQosFlag : "<< this -> enqueueQosFlag << ".";
+
+      //TODO: Generic priority assignment !!! 
+  /**for(int i=1;i<=spq.q_class.size;i++){ 
+    if(i==1)
+      spq.q_class[i].priority_level=queue1priority;
+     // spq.q_class[i].SetQueue(spq.q_class[0]);
+    else if(i==2)
+      spq.q_class[i].priority_level=queue2priority;    
+  } 
+      spq.Classify();
+**/
+  }
+  
 
   //
   // If IsLinkUp() is false it means there is no channel to send any packet 
@@ -670,6 +703,21 @@ PointToPointNetDevice::EtherToPpp (uint16_t proto)
     }
   return 0;
 }
+
+ void
+  PointToPointNetDevice::SetEnqueueQosFlag(bool qosFlag){
+    NS_LOG_FUNCTION (this);
+    enqueueQosFlag = qosFlag;
+  }
+
+  
+  void
+  PointToPointNetDevice::SetDequeuQosFlag(bool qosFlag)
+  {
+    NS_LOG_FUNCTION (this);
+    dequeueQosFlag = qosFlag;
+  }
+
 
 
 } // namespace ns3

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<traffic_list>
+    <traffic>
+        <maxPackets value="1000"/>
+        <maxBytes value="0"/>
+        <weight value="0"/>
+        <priority_level value="1"/>
+        <isDefault value="1"/>
+        <filters>
+            <filter>
+                <source_address value="10.1.1.1"/>
+                <source_port value="49153"/>
+                <destination_address value="10.1.2.2"/>
+                <destination_port value="9"/>
+            </filter>
+        </filters>
+    </traffic>
+    <traffic>
+        <maxPackets value="1000"/>
+        <maxBytes value="0"/>
+        <weight value="0"/>
+        <priority_level value="2"/>
+        <isDefault value="0"/>
+        <filters>
+            <filter>
+                <source_address value="10.1.1.1"/>
+                <source_port value="49154"/>
+                <destination_address value="10.1.2.2"/>
+                <destination_port value="10"/>
+            </filter>
+        </filters>
+    </traffic>
+</traffic_list>

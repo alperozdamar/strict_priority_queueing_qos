@@ -1,1 +1,41 @@
 
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.ipch
+
+*.bin
+
+*.json
+
+\.idea/
+
+ns-3-allinone/bake/\.hg/cache/checknoexec
+
+ns-3-allinone/ns-3-dev/\.hg/cache/checknoexec
+
+ns-3-allinone/netanim/\.hg/cache/checknoexec
+
+ns-3-allinone/bake/\.hg/cache/checkisexec
