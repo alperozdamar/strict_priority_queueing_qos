@@ -228,7 +228,7 @@ The project was built using WAF tool.  In order to build the project run this co
  $ cd workspace/Strict_Priority_Queueing_SPQ_Qos_Implementation/ns-3-allinone/ns-3-dev    
  $ ./waf configure
  $ ./waf build
- $ ./waf --run "scratch/starter --filename=config.xml"
+ $ ./waf --run "scratch/starter --filename=config-port.xml"
  ``` 
 
 ## Project Testing
@@ -237,6 +237,16 @@ Source/Destination IPaddress
 Source/Destnation mask
 Source/Destination port number
 Protocol Number
+
+Those filters functionality can be tested using the following commands:
+
+ ```linux    
+ $ ./waf --run "scratch/starter --filename=config-port.xml"
+ $ ./waf --run "scratch/starter --filename=config-ip.xml"
+ $ ./waf --run "scratch/starter --filename=config-protocol.xml"
+ $ ./waf --run "scratch/starter --filename=config-mask.xml"
+ ``` 
+
    
 ## Project Output
 
