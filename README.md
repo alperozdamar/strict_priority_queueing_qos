@@ -241,10 +241,10 @@ Protocol Number
 Those filters functionality can be tested using the following commands:
 
  ```linux    
- $ ./waf --run "scratch/starter --filename=config-port.xml"
- $ ./waf --run "scratch/starter --filename=config-ip.xml"
- $ ./waf --run "scratch/starter --filename=config-protocol.xml"
- $ ./waf --run "scratch/starter --filename=config-mask.xml"
+ $ ./waf --run "scratch/starter --filename=config_port.xml"
+ $ ./waf --run "scratch/starter --filename=config_ip.xml"
+ $ ./waf --run "scratch/starter --filename=config_protocol.xml"
+ $ ./waf --run "scratch/starter --filename=config_mask.xml"
  ``` 
 
    
