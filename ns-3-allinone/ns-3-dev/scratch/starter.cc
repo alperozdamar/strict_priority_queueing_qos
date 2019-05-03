@@ -167,21 +167,21 @@ main (int argc, char *argv[])
   PointToPointHelper p2p;
   p2p.SetDeviceAttribute ("DataRate", StringValue ("4Mbps"));
   p2p.SetChannelAttribute ("Delay", StringValue ("2ms"));
-  NetDeviceContainer n_01 = p2p.Install (nodes.Get(0),nodes.Get(1));
-  std::vector<TrafficClass*> tcs;
-  readConfigurationFile(fileName, tcs);
- // std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
+  NetDeviceContainer node01 = p2p.Install (nodes.Get(0),nodes.Get(1));
+  std::vector<TrafficClass*> traffics;
+  readConfigurationFile(fileName, traffics);
+ // std::cout<< "traffics.size: " << traffics.size() <<std::endl;  
   
 
  // p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
   p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
   p2p.SetChannelAttribute ("Delay", StringValue ("2ms"));
 
-  NetDeviceContainer n_12 = p2p.Install (nodes.Get(1),nodes.Get(2));
+  NetDeviceContainer node12 = p2p.Install (nodes.Get(1),nodes.Get(2));
 
-  Ptr<PointToPointNetDevice> router_send = DynamicCast<PointToPointNetDevice>(n_12.Get(0));
+  Ptr<PointToPointNetDevice> router_send = DynamicCast<PointToPointNetDevice>(node12.Get(0));
     
-  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_PACKETS,tcs);  
+  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_PACKETS,traffics);  
   router_send->SetQueue(queue2);
 
   InternetStackHelper stack;
@@ -189,9 +189,9 @@ main (int argc, char *argv[])
 
   Ipv4AddressHelper address;
   address.SetBase ("10.1.1.0", "255.255.255.0");
-  Ipv4InterfaceContainer interfaces1 = address.Assign (n_01);
+  Ipv4InterfaceContainer interfaces1 = address.Assign (node01);
   address.SetBase ("10.1.2.0", "255.255.255.0");
-  Ipv4InterfaceContainer interfaces2 = address.Assign (n_12);
+  Ipv4InterfaceContainer interfaces2 = address.Assign (node12);
   
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables();
@@ -212,7 +212,7 @@ main (int argc, char *argv[])
   UdpClientHelper echoClient (interfaces2.GetAddress (1), 9);
   echoClient.SetAttribute ("MaxPackets", UintegerValue (1000));
   echoClient.SetAttribute ("Interval", TimeValue (Seconds (0.001)));
-  echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
+  echoClient.SetAttribute ("PacketSize", UintegerValue (1000));
 
   ApplicationContainer client1 = echoClient.Install (nodes.Get (0));
   client1.Start (Seconds (3.000));
