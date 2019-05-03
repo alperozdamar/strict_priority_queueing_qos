@@ -72,6 +72,10 @@ TrafficClass::IsEmpty ()
   return m_queue.empty ();
 }
 
+
+/***
+ * To Enqueue the packet
+ * */
 bool
 TrafficClass::Enqueue (Ptr<Packet> packet)
 {
@@ -85,6 +89,9 @@ TrafficClass::Enqueue (Ptr<Packet> packet)
   return true;
 }
 
+/***
+ * To Dequeue the packet
+ * */
 Ptr<ns3::Packet>
 TrafficClass::Dequeue ()
 {
@@ -115,6 +122,9 @@ TrafficClass::Dequeue ()
   return p;
 }
 
+/***
+ * To Remove the packet
+ * */
 Ptr<ns3::Packet>
 TrafficClass::Remove ()
 {
@@ -124,6 +134,9 @@ TrafficClass::Remove ()
   return 0;
 }
 
+/***
+ * To Peek the packet
+ * */
 Ptr<ns3::Packet>
 TrafficClass::Peek ()
 {

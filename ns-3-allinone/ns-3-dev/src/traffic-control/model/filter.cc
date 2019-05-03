@@ -30,6 +30,10 @@ namespace ns3 {
       NS_LOG_FUNCTION (this); 
     }
 
+    /**
+     * To match the packet according to filters.
+     * 
+     * */    
     bool Filter::match (Ptr<ns3::Packet> packet){
       auto iter = elements.begin();     
       for(;iter!=elements.end();iter++){

@@ -4,7 +4,14 @@
  *  
  *  
  * Diff Serv : A driver for user to drive different queue.
+ * Diff Serv has the following public functions for handling
+ * packets. 
+ * 
+ * bool Enqueue (Ptr<Packet> item);
  *
+ *  Ptr<Packet> Dequeue ();
+ *  Ptr<Packet> Remove ();
+ *  Ptr<const Packet> Peek (void) const;
  * 
  * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
  * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
@@ -85,6 +92,10 @@ DiffServ<Packet>::DoEnqueue (Ptr<ns3::Packet> p)
   return false;
 }
 
+
+/**
+ * To Dequeue the packet 
+ **/
 template <typename Packet>
 Ptr<ns3::Packet>
 DiffServ<Packet>::DoDequeue (void)
@@ -100,6 +111,10 @@ DiffServ<Packet>::DoDequeue (void)
   return 0;
 }
 
+
+/**
+ * To peek the packet 
+ **/
 template <typename Packet>
 Ptr<const ns3::Packet>
 DiffServ<Packet>::DoPeek () const
@@ -116,6 +131,9 @@ DiffServ<Packet>::DoPeek () const
   return 0;
 }
 
+/**
+ * To Remove the packet from queue.
+ **/
 template <typename Packet>
 Ptr<ns3::Packet>
 DiffServ<Packet>::DoRemove (void)
@@ -132,6 +150,10 @@ DiffServ<Packet>::DoRemove (void)
   return 0;
 }
 
+/**
+ * The classify function utilizes filter aspect to sort the traffic packets into appropriate
+ * traffic queues.
+ **/
 template <typename Packet>
 uint32_t
 DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
@@ -144,6 +166,10 @@ DiffServ<Packet>::Classify (Ptr<ns3::Packet> p)
   return match_index;
 }
 
+/**
+ * To schedule the packet and return it.
+ *  
+ **/
 template <typename Packet>
 Ptr<ns3::Packet>
 DiffServ<Packet>::Schedule ()
@@ -153,6 +179,11 @@ DiffServ<Packet>::Schedule ()
   return  0; 
 }
 
+
+
+/***
+ * To Enqueue the packet
+ * */
 template <typename Packet>
 bool
 DiffServ<Packet>::Enqueue (Ptr<Packet> item)
@@ -162,6 +193,9 @@ DiffServ<Packet>::Enqueue (Ptr<Packet> item)
   return DoEnqueue (Tail (), item);
 }
 
+/***
+ * To Dequeue the packet
+ * */
 template <typename Packet>
 Ptr<Packet>
 DiffServ<Packet>::Dequeue (void)
@@ -175,6 +209,9 @@ DiffServ<Packet>::Dequeue (void)
   return item;
 }
 
+/***
+ * To Remove the packet
+ * */
 template <typename Packet>
 Ptr<Packet>
 DiffServ<Packet>::Remove (void)
@@ -188,6 +225,10 @@ DiffServ<Packet>::Remove (void)
   return item;
 }
 
+
+/***
+ * To Peek the packet
+ * */
 template <typename Packet>
 Ptr<const Packet>
 DiffServ<Packet>::Peek (void) const

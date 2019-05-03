@@ -51,6 +51,9 @@ SPQ<Packet>::~SPQ ()
   NS_LOG_FUNCTION (this);
 }
 
+/***
+ * To Enqueue the packet
+ * */
 template <typename Packet>
 bool
 SPQ<Packet>::Enqueue (Ptr<Packet> p)
@@ -69,6 +72,9 @@ SPQ<Packet>::Enqueue (Ptr<Packet> p)
   return true;
 }
 
+/***
+ * To Dequeue the packet
+ * */
 template <typename Packet>
 Ptr<Packet>
 SPQ<Packet>::Dequeue (void)
@@ -82,6 +88,9 @@ SPQ<Packet>::Dequeue (void)
   return p;
 }
 
+/***
+ * To Remove the packet
+ * */
 template <typename Packet>
 Ptr<Packet>
 SPQ<Packet>::Remove (void)
@@ -92,6 +101,9 @@ SPQ<Packet>::Remove (void)
   return item;
 }
 
+/***
+ * To Peek the packet
+ * */
 template <typename Packet>
 Ptr<const Packet>
 SPQ<Packet>::Peek (void) const
@@ -101,6 +113,11 @@ SPQ<Packet>::Peek (void) const
   return DiffServ<Packet>::Peek ();
 }
 
+/**
+ * The classify function utilizes filter aspect to sort the traffic
+ *  packets into appropriate trafficqueues
+ * 
+ * */
 template <typename Packet>
 uint32_t
 SPQ<Packet>::Classify (Ptr<Packet> p)
@@ -135,6 +152,10 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
   return index;
 }
 
+/** 
+ * The schedule function carries out designed Quality-of-Service (QoS) algorithm to schedule 
+ * whichtraffic queue to be served at the time.
+ * */
 template <typename Packet>
 Ptr<Packet>
 SPQ<Packet>::Schedule ()
@@ -161,6 +182,9 @@ SPQ<Packet>::Schedule ()
     return 0;
 }
 
+/**
+ * To Add to Traffic Class
+ * */
 template <typename Packet>
 bool
 SPQ<Packet>::AddTrafficClass (TrafficClass *trafficClass)
