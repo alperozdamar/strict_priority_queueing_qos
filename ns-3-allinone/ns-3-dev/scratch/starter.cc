@@ -1,3 +1,16 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Starter: Topology for Project-2
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
+
+
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -23,79 +36,78 @@ using namespace ns3;
 NS_LOG_COMPONENT_DEFINE ("Quality of Service");
 
 static Filter* 
-create_filter(xmlNode * node){
-  Filter* result = new Filter();
+createFilter(xmlNode * node){
+  Filter* filterWithElement = new Filter();
 
-  xmlNode *cur_node = nullptr;
+  xmlNode *point = nullptr;
 
-  for(cur_node=node->children; cur_node; cur_node=cur_node->next){
-    if(cur_node->type==XML_ELEMENT_NODE){     
-      if(strcmp((char*)cur_node->name,"source_address")==0){
-        Ipv4Address address((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new SourceIpAddress(address));
+  for(point=node->children; point; point=point->next){
+    if(point->type==XML_ELEMENT_NODE){     
+      if(strcmp((char*)point->name,"source_address")==0){
+        Ipv4Address address((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new SourceIpAddress(address));
       }   
-      if(strcmp((char*)cur_node->name,"source_mask")==0){
-        Ipv4Mask mask((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new SourceMask(mask));
+      if(strcmp((char*)point->name,"source_mask")==0){
+        Ipv4Mask mask((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new SourceMask(mask));
       }
-      if(strcmp((char*)cur_node->name,"source_port")==0){
-        uint32_t port = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new SourcePortNumber(port));
+      if(strcmp((char*)point->name,"source_port")==0){
+        uint32_t port = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new SourcePortNumber(port));
       }      
-      if(strcmp((char*)cur_node->name,"destination_address")==0){
-        Ipv4Address address((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new DestinationIpAddress(address));
+      if(strcmp((char*)point->name,"destination_address")==0){
+        Ipv4Address address((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new DestinationIpAddress(address));
       }   
-      if(strcmp((char*)cur_node->name,"destination_mask")==0){
-        Ipv4Mask mask((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new DestinationMask(mask));
+      if(strcmp((char*)point->name,"destination_mask")==0){
+        Ipv4Mask mask((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new DestinationMask(mask));
       }
-      if(strcmp((char*)cur_node->name,"destination_port")==0){
-        uint32_t port = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new DestinationPortNumber(port));
+      if(strcmp((char*)point->name,"destination_port")==0){
+        uint32_t port = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new DestinationPortNumber(port));
       }
-      if(strcmp((char*)cur_node->name,"protocol")==0){
-        uint32_t protocol = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
-        result->elements.push_back(new ProtocolNumber(protocol));  
+      if(strcmp((char*)point->name,"protocol")==0){
+        uint32_t protocol = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
+        filterWithElement->elements.push_back(new ProtocolNumber(protocol));  
       }
     }
   }
-  return result;
+  return filterWithElement;
 }
 
 static TrafficClass* 
-create_from_xml(xmlNode * node){
-  xmlNode *cur_node = nullptr;
-  uint32_t max_packets = 0;
-  uint32_t max_bytes = 0;
+generateFromXml(xmlNode * node){
+  xmlNode *point = nullptr;
+  uint32_t maxPackets = 0;
+  uint32_t maxBytes = 0;
   double_t weight = 0;
-  uint32_t priority_level = 0;
-  bool is_default = false;
+  uint32_t priorityLevel = 0;
+  bool isDefault = false;
 
   std::vector<Filter*> filters;
 
-  for(cur_node=node; cur_node; cur_node=cur_node->next){
-    if(cur_node->type==XML_ELEMENT_NODE){
-      if(strcmp((char*)cur_node->name,"maxPackets")==0){
-        max_packets = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+  for(point=node; point; point=point->next){
+    if(point->type==XML_ELEMENT_NODE){
+      if(strcmp((char*)point->name,"maxPackets")==0){
+        maxPackets = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
       }
-      if(strcmp((char*)cur_node->name,"maxBytes")==0){
-        max_bytes = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      if(strcmp((char*)point->name,"maxBytes")==0){
+        maxBytes = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
       }
-      if(strcmp((char*)cur_node->name,"weight")==0){
-        weight = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      if(strcmp((char*)point->name,"weight")==0){
+        weight = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
       }
-      if(strcmp((char*)cur_node->name,"priority_level")==0){
-        priority_level = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      if(strcmp((char*)point->name,"priority_level")==0){
+        priorityLevel = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
       }
-      if(strcmp((char*)cur_node->name,"isDefault")==0){
-        is_default = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      if(strcmp((char*)point->name,"isDefault")==0){
+        isDefault = atoi((char*)xmlGetProp(point,(xmlChar *)"value"));
       }
-      if(strcmp((char*)cur_node->name,"filters")==0){
-        xmlNode *cur_filter = nullptr;
-        for(cur_filter=cur_node->children; cur_filter; cur_filter=cur_filter->next){
-          Filter* filter = create_filter(cur_filter);
-
+      if(strcmp((char*)point->name,"filters")==0){
+        xmlNode *currentFilter = nullptr;
+        for(currentFilter=point->children; currentFilter; currentFilter=currentFilter->next){
+          Filter* filter = createFilter(currentFilter);
           if(filter->elements.size()!=0){            
             std::cout<<"filter elements: "<<filter->elements.size()<<std::endl;
             filters.push_back(filter);
@@ -104,16 +116,16 @@ create_from_xml(xmlNode * node){
       }
     }
   }
-  TrafficClass* tc = new TrafficClass(max_packets,max_bytes, weight, priority_level, is_default, filters);
+  TrafficClass* tc = new TrafficClass(maxPackets,maxBytes, weight, priorityLevel, isDefault, filters);
   return tc;
 }
 
 static void
-get_traffic_class(xmlNode * node, int level, std::vector<TrafficClass*> & result){
-  xmlNode *cur_node = nullptr;
-  for(cur_node=node; cur_node; cur_node=cur_node->next){
-    if(cur_node->type==XML_ELEMENT_NODE){
-      result.push_back(create_from_xml(cur_node->children));            
+getTrafficClass(xmlNode * node, int level, std::vector<TrafficClass*> & result){
+  xmlNode *point = nullptr;
+  for(point=node; point; point=point->next){
+    if(point->type==XML_ELEMENT_NODE){
+      result.push_back(generateFromXml(point->children));            
     }
   }
 }
@@ -130,10 +142,10 @@ readConfigurationFile(const std::string filename, std::vector<TrafficClass*> & r
     return;
   }
 
-  xmlNode *root_ele = nullptr;
-  root_ele = xmlDocGetRootElement(doc);
+  xmlNode *rootElement = nullptr;
+  rootElement = xmlDocGetRootElement(doc);
 
-  get_traffic_class(root_ele->children,1, result);
+  getTrafficClass(rootElement->children,1, result);
 
   xmlFreeDoc(doc);
 
@@ -143,9 +155,9 @@ readConfigurationFile(const std::string filename, std::vector<TrafficClass*> & r
 int
 main (int argc, char *argv[])
 {
-  std::string file_name = "";
+  std::string fileName = "";
   CommandLine cmd;
-  cmd.AddValue("filename","Name of the configuration file", file_name);
+  cmd.AddValue("filename","Name of the configuration file", fileName);
   cmd.Parse (argc, argv);
 
 
@@ -157,7 +169,7 @@ main (int argc, char *argv[])
   p2p.SetChannelAttribute ("Delay", StringValue ("2ms"));
   NetDeviceContainer n_01 = p2p.Install (nodes.Get(0),nodes.Get(1));
   std::vector<TrafficClass*> tcs;
-  readConfigurationFile(file_name, tcs);
+  readConfigurationFile(fileName, tcs);
  // std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
   
 
