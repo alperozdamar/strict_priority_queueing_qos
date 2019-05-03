@@ -3,280 +3,226 @@
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
+#include "ns3/point-to-point-net-device.h"
+#include "ns3/spq.h"
+#include <vector>
 #include "ns3/netanim-module.h"
-#include <iostream>
-#include <fstream>
-#include <iomanip> 
-#include <chrono> 
-#include "ns3/udp-client.h"
-#include "ns3/source-ip-address.h" 
+#include "ns3/config-store-module.h"
+#include <libxml/tree.h>
+#include <libxml/parser.h> 
+#include "ns3/source-ip-address.h"
+#include "ns3/source-mask.h"
+#include "ns3/source-port-number.h"
+#include "ns3/destination-ip-address.h"
+#include "ns3/destination-mask.h"
 #include "ns3/destination-port-number.h"
-#include "ns3/source-port-number.h"  
-#include "ns3/spq.h" 
-
+#include "ns3/protocol-number.h" 
 
 using namespace ns3;
-using namespace std::chrono;
 
-NS_LOG_COMPONENT_DEFINE("Point to point connection"); 
+NS_LOG_COMPONENT_DEFINE ("Quality of Service");
 
-static std::string CONFIG_FILE = "config.txt";
-static uint32_t MTU_SIZE = 2000;
-static uint32_t PACKET_SIZE = 1100; //This is for 0. Low enthropy. 
-static Time interPacketInterval = Seconds(0.01);  
-using namespace std::chrono;
-uint16_t serverPort = 9; 
-static int numberOfQueue=0;
-static uint32_t dataRate = 1;
-static uint32_t queue1priority = 1;
-static uint32_t queue2priority = 3;
+static Filter* 
+create_filter(xmlNode * node){
+  Filter* result = new Filter();
 
-/**
- * 
- * Reading Configuration File......
- * 
- * */
-bool readConfigurationFile(){  
-  std::ifstream cFile (CONFIG_FILE);
-      if (cFile.is_open())
-      {
-          std::string line;
-          while(getline(cFile, line)){
-              line.erase(std::remove_if(line.begin(), line.end(), isspace),
-                                  line.end());
-              if(line[0] == '#' || line.empty())
-                  continue;
-              auto delimiterPos = line.find("=");
-              std::string name = line.substr(0, delimiterPos);
-              std::string value = line.substr(delimiterPos + 1);            
-              std::cout << name << " " << value << '\n';
+  xmlNode *cur_node = nullptr;
 
-              if(name.compare("numberOfQueue")==0 ){
-                int intValue = atoi(value.c_str());
-                numberOfQueue=intValue;                              
-              }else if(name.compare("dataRate")==0 ){
-                int intValue = atoi(value.c_str());
-                dataRate=intValue;                              
-              }else if(name.compare("queue1priority")==0 ){
-                int intValue = atoi(value.c_str());
-                queue1priority=intValue;                              
-              }else if(name.compare("queue2priority")==0 ){
-                int intValue = atoi(value.c_str());
-                queue2priority=intValue;                              
-              }
-              else{
-                NS_LOG_UNCOND("numberOfQueue is not equal to "<< name);
-              }
-          }        
+  for(cur_node=node->children; cur_node; cur_node=cur_node->next){
+    if(cur_node->type==XML_ELEMENT_NODE){     
+      if(strcmp((char*)cur_node->name,"source_address")==0){
+        Ipv4Address address((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new SourceIpAddress(address));
+      }   
+      if(strcmp((char*)cur_node->name,"source_mask")==0){
+        Ipv4Mask mask((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new SourceMask(mask));
       }
-      else {
-          std::cerr << "Couldn't open config file for reading.\n";
-          return false;
+      if(strcmp((char*)cur_node->name,"source_port")==0){
+        uint32_t port = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new SourcePortNumber(port));
+      }      
+      if(strcmp((char*)cur_node->name,"destination_address")==0){
+        Ipv4Address address((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new DestinationIpAddress(address));
+      }   
+      if(strcmp((char*)cur_node->name,"destination_mask")==0){
+        Ipv4Mask mask((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new DestinationMask(mask));
       }
-
-      return true;
+      if(strcmp((char*)cur_node->name,"destination_port")==0){
+        uint32_t port = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new DestinationPortNumber(port));
+      }
+      if(strcmp((char*)cur_node->name,"protocol")==0){
+        uint32_t protocol = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+        result->elements.push_back(new ProtocolNumber(protocol));  
+      }
+    }
+  }
+  return result;
 }
 
-int main (int argc, char *argv[])
-{
-  /* Read command line argument  */    
-  uint32_t MAX_PACKET_COUNT=1;
-  CommandLine cmd;
-  cmd.AddValue("CompressionDataRate", "CompressionDataRate [Mbps]", dataRate);    
-  cmd.AddValue("configFileName", "configFileName", CONFIG_FILE);    
-  cmd.AddValue("MaxPacketCount", "MaxPacketCount", MAX_PACKET_COUNT); 
-  cmd.Parse (argc, argv);
-  NS_LOG_UNCOND("**********Command Line Configuration Parameters**************");  
-  NS_LOG_UNCOND("*************************************************************");    
-
-  /* READ CONFIGURATION FILE */
-  bool configResult = readConfigurationFile();      
-
-  if(configResult){
-    NS_LOG_UNCOND("************Configuration File read, successfully************");  
-    NS_LOG_UNCOND("numberOfQueue:"<<numberOfQueue);
-    NS_LOG_UNCOND("dataRate:"<<dataRate);
-    NS_LOG_UNCOND("queue1priority:"<<queue1priority);
-    NS_LOG_UNCOND("queue2priority:"<<queue2priority);
-  }else{
-    NS_LOG_UNCOND("PROBLEM IN CONFIGURATION FILE!!!");
-  }
-
-  NodeContainer nodes;
-  nodes.Create(3);    
-  
-  InternetStackHelper stack;
-  stack.Install(nodes);  
-  std::string dataRateString = std::to_string(dataRate);
-
-
-/********************************SENDER TO ROUTER**************************************/
-
-  /* Link btw Sender Router */
-  PointToPointHelper P2PSenderToRouter;
-  P2PSenderToRouter.SetDeviceAttribute("DataRate", StringValue("5Mbps"));
-  P2PSenderToRouter.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (1)));
-  P2PSenderToRouter.SetDeviceAttribute ("Mtu", UintegerValue (MTU_SIZE));   
-  
-    /* Connect node Sender & Router */
-  NetDeviceContainer deviceSenderToRouter; 
-  deviceSenderToRouter = P2PSenderToRouter.Install(nodes.Get(0),nodes.Get(1)); //TODO
-
-
-  Ptr <PointToPointNetDevice> PpNdSenderToRouter = DynamicCast<PointToPointNetDevice> (deviceSenderToRouter.Get(1));
-  PpNdSenderToRouter -> SetEnqueueQosFlag(true);  
- // PpNdSenderToRouter ->SetQueue(spq);
-  //PpNdSenderToRouter -> SetQueue(spq.q_class[0]);
-  
-
-
-
-  Ipv4AddressHelper ipv4Address;
-  /* Assign IP to SenderRouter */  
-  ipv4Address.SetBase ("10.0.1.0", "255.255.255.0");
-  Ipv4InterfaceContainer interfaceSenderRouter1;
-  interfaceSenderRouter1 = ipv4Address.Assign (deviceSenderToRouter);
-/*******************************SENDER TO ROUTER (END)************************************/
-
-/********************************ROUTER TO RECEIVER**************************************/
-
-  /* Link btw Router Receiver */
-  PointToPointHelper P2PRouterToReceiver;
-  P2PRouterToReceiver.SetDeviceAttribute("DataRate", StringValue("5Mbps"));
-  P2PRouterToReceiver.SetChannelAttribute ("Delay", TimeValue (MilliSeconds (1)));
-  P2PRouterToReceiver.SetDeviceAttribute ("Mtu", UintegerValue (MTU_SIZE));
-           
-  /* Connect node Router & Receiver */  
-  NetDeviceContainer deviceRouterToReceiver; 
-  deviceRouterToReceiver = P2PRouterToReceiver.Install(nodes.Get(1),nodes.Get(2));  
- 
-  //TODO:....Check!
-  //Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2)); 
-  //PpNdRouterToServer -> SetDequeuQosFlag(true); 
-
-  std::vector<TrafficClass*> vectorList;  
-  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_BYTES,vectorList);
-
-  //PpNdRouterToServer -> SetQueue(spqInstance);
-
-  /* Assign IP to Router2Receiver */
-  ipv4Address.SetBase ("10.0.2.0", "255.255.255.0");
-  Ipv4InterfaceContainer interfaceRouterToReceiver;
-  interfaceRouterToReceiver= ipv4Address.Assign(deviceRouterToReceiver);
-  
-
-  //Ptr<SPQ<Packet>> queue2= CreateObject<SPQ<Packet>>();  
-  Ptr <PointToPointNetDevice> PpNdRouterToServer = DynamicCast<PointToPointNetDevice> (deviceRouterToReceiver.Get(2));         
- 
-
-
-  //uint32_t Q1maxPacket = 1000;
-  //uint32_t Q2maxPacket = 500;
-
-  //uint32_t Q1maxBytes = 1000;
-  //uint32_t Q2maxBytes = 500; 
-
- // double_t Q1weight = 0;
- // double_t Q2weight = 0;
-
-  //uint32_t Q1priority_level = 1;
-  //uint32_t Q2priority_level = 3;
-
-  //bool Q1isDefault = false;
-  //bool Q2isDefault = true;
+static TrafficClass* 
+create_from_xml(xmlNode * node){
+  xmlNode *cur_node = nullptr;
+  uint32_t max_packets = 0;
+  uint32_t max_bytes = 0;
+  double_t weight = 0;
+  uint32_t priority_level = 0;
+  bool is_default = false;
 
   std::vector<Filter*> filters;
 
-  std::string filterSourceIpAddress="10.0.1.0";
-  std::string filterDestinationIpAddress="10.0.2.0";
-  uint32_t filterSourcePort=5060;
-  uint32_t filterDestinationPort=6060;
+  for(cur_node=node; cur_node; cur_node=cur_node->next){
+    if(cur_node->type==XML_ELEMENT_NODE){
+      if(strcmp((char*)cur_node->name,"maxPackets")==0){
+        max_packets = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      }
+      if(strcmp((char*)cur_node->name,"maxBytes")==0){
+        max_bytes = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      }
+      if(strcmp((char*)cur_node->name,"weight")==0){
+        weight = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      }
+      if(strcmp((char*)cur_node->name,"priority_level")==0){
+        priority_level = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      }
+      if(strcmp((char*)cur_node->name,"isDefault")==0){
+        is_default = atoi((char*)xmlGetProp(cur_node,(xmlChar *)"value"));
+      }
+      if(strcmp((char*)cur_node->name,"filters")==0){
+        xmlNode *cur_filter = nullptr;
+        for(cur_filter=cur_node->children; cur_filter; cur_filter=cur_filter->next){
+          Filter* filter = create_filter(cur_filter);
+
+          if(filter->elements.size()!=0){            
+            std::cout<<"filter elements: "<<filter->elements.size()<<std::endl;
+            filters.push_back(filter);
+          }
+        }
+      }
+    }
+  }
+  TrafficClass* tc = new TrafficClass(max_packets,max_bytes, weight, priority_level, is_default, filters);
+  return tc;
+}
+
+static void
+get_traffic_class(xmlNode * node, int level, std::vector<TrafficClass*> & result){
+  xmlNode *cur_node = nullptr;
+  for(cur_node=node; cur_node; cur_node=cur_node->next){
+    if(cur_node->type==XML_ELEMENT_NODE){
+      result.push_back(create_from_xml(cur_node->children));            
+    }
+  }
+}
+
+static void
+readConfigurationFile(const std::string filename, std::vector<TrafficClass*> & result){
+  char char_array[filename.length()+1];
+  strcpy(char_array, filename.c_str());
+
+  xmlDocPtr doc;
+  doc = xmlReadFile(char_array,nullptr,0);
+  if(doc==nullptr){
+    fprintf(stderr, "Failed to parse %s\n", char_array);
+    return;
+  }
+
+  xmlNode *root_ele = nullptr;
+  root_ele = xmlDocGetRootElement(doc);
+
+  get_traffic_class(root_ele->children,1, result);
+
+  xmlFreeDoc(doc);
+
+  xmlCleanupParser();
+}
+
+int
+main (int argc, char *argv[])
+{
+  std::string file_name = "";
+  CommandLine cmd;
+  cmd.AddValue("filename","Name of the configuration file", file_name);
+  cmd.Parse (argc, argv);
 
 
-  SourceIpAddress sourceIpAddressQ1 = SourceIpAddress(Ipv4Address("10.0.1.0"));
-  SourceIpAddress sourceIpAddressQ2 = SourceIpAddress(Ipv4Address("10.0.8.8"));
-  SourceIpAddress destinationIpAddressQ1 = SourceIpAddress(Ipv4Address("10.0.2.0"));
-  SourceIpAddress destinationIpAddressQ2 = SourceIpAddress(Ipv4Address("10.0.9.9"));
-  SourcePortNumber sourcePortNumberQ1 = SourcePortNumber(filterSourcePort);
-  SourcePortNumber sourcePortNumberQ2= SourcePortNumber(filterSourcePort);
-  DestinationPortNumber destinationPortNumberQ1= DestinationPortNumber(filterDestinationPort);
-  DestinationPortNumber destinationPortNumberQ2= DestinationPortNumber(filterDestinationPort);
+  NodeContainer nodes;
+  nodes.Create (3);
 
-  static Filter filterForQ1;
-  filterForQ1.elements.push_back(&sourceIpAddressQ1);
-  filterForQ1.elements.push_back(&sourcePortNumberQ2);
-  filterForQ1.elements.push_back(&destinationIpAddressQ1);
-  filterForQ1.elements.push_back(&destinationPortNumberQ2);
-
-  filters.push_back(&filterForQ1);
-
-  static Filter filterForQ2;
-  filterForQ2.elements.push_back(&sourceIpAddressQ1);
-  filterForQ2.elements.push_back(&sourcePortNumberQ2);
-  filterForQ2.elements.push_back(&destinationIpAddressQ1);
-  filterForQ2.elements.push_back(&destinationPortNumberQ2);
-
- // filters.push_back(&filterForQ2);
-  //We need to pass these queues to vectorList of the SPQ!  
-
+  PointToPointHelper p2p;
+  p2p.SetDeviceAttribute ("DataRate", StringValue ("4Mbps"));
+  p2p.SetChannelAttribute ("Delay", StringValue ("2ms"));
+  NetDeviceContainer n_01 = p2p.Install (nodes.Get(0),nodes.Get(1));
+  std::vector<TrafficClass*> tcs;
+  readConfigurationFile(file_name, tcs);
+ // std::cout<< "tcs.size: " << tcs.size() <<std::endl;  
   
+
+ // p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
+  p2p.SetDeviceAttribute ("DataRate", StringValue ("1Mbps"));
+  p2p.SetChannelAttribute ("Delay", StringValue ("2ms"));
+
+  NetDeviceContainer n_12 = p2p.Install (nodes.Get(1),nodes.Get(2));
+
+  Ptr<PointToPointNetDevice> router_send = DynamicCast<PointToPointNetDevice>(n_12.Get(0));
+    
+  Ptr<SPQ<Packet>> queue2 = new SPQ<Packet>(QueueMode::QUEUE_MODE_PACKETS,tcs);  
+  router_send->SetQueue(queue2);
+
+  InternetStackHelper stack;
+  stack.Install (nodes);
+
+  Ipv4AddressHelper address;
+  address.SetBase ("10.1.1.0", "255.255.255.0");
+  Ipv4InterfaceContainer interfaces1 = address.Assign (n_01);
+  address.SetBase ("10.1.2.0", "255.255.255.0");
+  Ipv4InterfaceContainer interfaces2 = address.Assign (n_12);
   
-  //TrafficClass *Q1 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters); 
-  //TrafficClass *Q2 = new TrafficClass(Q1maxPacket,Q1maxBytes,Q1weight,Q1priority_level,Q1isDefault, filters);    
-
-  //queue2->AddTrafficClass(Q1);
-  //queue2->AddTrafficClass(Q2);  
-
-  PpNdRouterToServer->SetQueue(queue2); //This is correct.confirmed!
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+  UdpServerHelper echoServer (9);
 
-  Address serverAddress;
-  serverAddress = Address(interfaceRouterToReceiver.GetAddress(1));
-
-  /* Create Server */  
-  UdpServerHelper server (serverPort);
-  ApplicationContainer serverApps = server.Install (nodes.Get(2));
+  ApplicationContainer serverApps = echoServer.Install (nodes.Get (2));
   serverApps.Start (Seconds (1.0));
-  serverApps.Stop (Seconds (60.0));       
+  serverApps.Stop (Seconds (10000.0));
 
-  UdpClientHelper clientHigh (serverAddress, serverPort);
-  clientHigh.SetAttribute ("Interval", TimeValue (interPacketInterval));   
-  clientHigh.SetAttribute ("MaxPackets", UintegerValue (MAX_PACKET_COUNT)); 
-  clientHigh.SetAttribute ("PacketSize", UintegerValue (PACKET_SIZE));   
-  ApplicationContainer clientAppsHigh = clientHigh.Install (nodes.Get(0));
-  Ptr<UdpClient> UdpClientHigh = DynamicCast<UdpClient>(clientAppsHigh.Get(0));
-  
-     
+  UdpServerHelper echoServer2 (10);
+  ApplicationContainer serverApps2 = echoServer2.Install (nodes.Get (2));
+  serverApps2.Start (Seconds (1.0));
+  serverApps2.Stop (Seconds (10000.0));
 
- 
-  //Start client
-  clientAppsHigh.Start(Seconds (20.0));
-  clientAppsHigh.Stop(Seconds (40.0));   
- 
-  Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
 
-  #if 1
-  AsciiTraceHelper ascii;  
+  //1st sender wıll have source port 49153
+  //2nd sender wıll have source port 49154
+  UdpClientHelper echoClient (interfaces2.GetAddress (1), 9);
+  echoClient.SetAttribute ("MaxPackets", UintegerValue (1000));
+  echoClient.SetAttribute ("Interval", TimeValue (Seconds (0.001)));
+  echoClient.SetAttribute ("PacketSize", UintegerValue (1024));
 
-  P2PRouterToReceiver.EnableAsciiAll(ascii.CreateFileStream("Sender.tr"));
-  P2PRouterToReceiver.EnablePcap("Sender", deviceSenderToRouter.Get(0),false, false);
+  ApplicationContainer client1 = echoClient.Install (nodes.Get (0));
+  client1.Start (Seconds (3.000));
+  client1.Stop (Seconds (10000.0));
 
-  P2PRouterToReceiver.EnableAsciiAll(ascii.CreateFileStream("Receiver.tr"));
-  P2PRouterToReceiver.EnablePcap("Receiver", deviceRouterToReceiver.Get(1),false, false);
+  UdpClientHelper echoClient2 (interfaces2.GetAddress (1), 10);
+  echoClient2.SetAttribute ("MaxPackets", UintegerValue (1000));
+  echoClient2.SetAttribute ("Interval", TimeValue (Seconds (0.001)));
+  echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
 
-  #elif 0
-  P2PSenderToRouter.EnablePcapAll ("P2PSenderToRouter");  
-  P2PRouterToReceiver.EnablePcapAll ("P2PRouterToReceiver");
-  #endif 
+  ApplicationContainer client2 = echoClient2.Install (nodes.Get (0));
+  client2.Start (Seconds (5.101));
+  client2.Stop (Seconds (10000.0));
 
-  AnimationInterface anim("p2p.xml");
-  anim.SetConstantPosition(nodes.Get(0), 0.0, 0.0);
-  anim.SetConstantPosition(nodes.Get(1), 10.0, 10.0);
-  anim.SetConstantPosition(nodes.Get(2), 20.0, 20.0);  
+  AnimationInterface anim ("spq_topology.xml");
+	anim.SetConstantPosition (nodes.Get(0), 0, 0);
+  anim.SetConstantPosition (nodes.Get(1), 10, 10);
+  anim.SetConstantPosition (nodes.Get(2), 20, 20);
+
+  p2p.EnablePcapAll("spq");
 
   Simulator::Run ();
   Simulator::Destroy ();
-
   return 0;
 }

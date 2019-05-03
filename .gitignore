@@ -39,3 +39,5 @@ ns-3-allinone/ns-3-dev/\.hg/cache/checknoexec
 ns-3-allinone/netanim/\.hg/cache/checknoexec
 
 ns-3-allinone/bake/\.hg/cache/checkisexec
+
+ns-3-allinone/ns-3-dev/spq_topology\.xml

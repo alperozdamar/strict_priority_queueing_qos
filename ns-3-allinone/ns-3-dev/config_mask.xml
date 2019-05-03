@@ -8,9 +8,9 @@
         <isDefault value="0"/>
         <filters>
             <filter>
-                <destination_mask value="20"/>
+                <destination_mask value="/20"/>
 	    </filter>
-        </filters>
+    </filters>
     </traffic>
     <traffic>
         <maxPackets value="1000"/>

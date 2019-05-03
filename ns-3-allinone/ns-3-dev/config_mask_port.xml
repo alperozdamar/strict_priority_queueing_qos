@@ -8,9 +8,13 @@
         <isDefault value="0"/>
         <filters>
             <filter>
-                <protocol value="17"/>
+                <destination_mask value="/20"/>
 	    </filter>
-        </filters>
+            <filter>
+                <source_port value="49153"/>
+                <destination_port value="9"/>
+            </filter>
+    </filters>
     </traffic>
     <traffic>
         <maxPackets value="1000"/>
