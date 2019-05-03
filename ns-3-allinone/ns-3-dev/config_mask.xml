@@ -8,8 +8,7 @@
         <isDefault value="0"/>
         <filters>
             <filter>
-                <source_port value="49154"/>
-                <destination_port value="10"/>
+                <destination_mask value="20"/>
 	    </filter>
         </filters>
     </traffic>
