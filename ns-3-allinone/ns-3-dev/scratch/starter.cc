@@ -212,7 +212,7 @@ main (int argc, char *argv[])
   echoClient2.SetAttribute ("PacketSize", UintegerValue (1000));
 
   ApplicationContainer client2 = echoClient2.Install (nodes.Get (0));
-  client2.Start (Seconds (5.101));
+  client2.Start (Seconds (3.101)); //5.101
   client2.Stop (Seconds (10000.0));
 
   AnimationInterface anim ("spq_topology.xml");
