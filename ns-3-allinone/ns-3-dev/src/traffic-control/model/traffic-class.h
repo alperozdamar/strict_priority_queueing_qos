@@ -1,4 +1,15 @@
-
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Traffic Class the Class to send traffic with different
+ * characteristics. 
+ * for sening the packet.
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #ifndef TRAFFIC_CLASS_H
 #define TRAFFIC_CLASS_H
 
@@ -33,10 +44,10 @@ public:
   bool IsEmpty ();
   Ptr<ns3::Packet> Remove();
   Ptr<ns3::Packet> Peek();
+  uint32_t priority_level;
 
-  uint32_t priority_level; // TODO should be private 
-  bool isDefault;        //only one traffic class should have isDefault value=1
-  std::queue<Ptr<Packet>> m_queue;  // TODO should be private 
+  bool isDefault;//only one traffic class should have isDefault value=1
+  std::queue<Ptr<Packet>> m_queue;  
 
 private:
   uint32_t bytes;
@@ -44,10 +55,9 @@ private:
   uint32_t maxPackets;    //related SPQ
   uint32_t maxBytes;      //related DDR
   double_t weight;        //related DDR
- 
+  uint32_t prioritylevel;  
+  std::queue<Ptr<Packet>> mqueue;
   
-  //Ptr<ns3::Queue<ns3::Packet>> m_queue;
-  //std::queue<Ptr<Packet>> m_queue;  
 };
 
 } // namespace ns3

@@ -1,4 +1,14 @@
-
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Strict Priority Queueing(SPQ) the queue: to give priority
+ * for sening the packet.
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #ifndef SPQ_H
 #define SPQ_H
 
@@ -40,13 +50,10 @@ public:
 
 private:
 
-   //using Queue<Packet>::Head;
-   //using Queue<Packet>::Tail;
    using DiffServ<Packet>::Enqueue;
    using DiffServ<Packet>::Dequeue;
    using DiffServ<Packet>::Remove;
    using DiffServ<Packet>::Peek;
-
 
    using DiffServ<Packet>::Schedule;
    using DiffServ<Packet>::Classify;

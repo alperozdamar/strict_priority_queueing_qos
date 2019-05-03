@@ -1,4 +1,15 @@
-
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Traffic Class the Class to send traffic with different
+ * characteristics. 
+ * for sening the packet.
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #include "ns3/log.h"
 #include "traffic-class.h"
 

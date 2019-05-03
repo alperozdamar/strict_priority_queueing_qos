@@ -1,8 +1,14 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
-*
-*
- */
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Diff Serv : A driver for user to drive different queue.
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 
 #ifndef DIFFSERV_H
 #define DIFFSERV_H
@@ -41,33 +47,26 @@ public:
 
   uint32_t Classify (Ptr<ns3::Packet> p);
 
-    // wE MUST define these because inherrited from Queue
-    bool Enqueue (Ptr<Packet> item);
+  bool Enqueue (Ptr<Packet> item);
 
-    Ptr<Packet> Dequeue ();
+  Ptr<Packet> Dequeue ();
 
-    Ptr<Packet> Remove ();
+  Ptr<Packet> Remove ();
 
-    Ptr<const Packet> Peek (void) const;
-
-
+  Ptr<const Packet> Peek (void) const;
 
 private: 
 
   QueueMode m_mode; 
   std::vector<TrafficClass*> q_class; 
 
-  // Came from project spec
+  bool DoEnqueue (Ptr<ns3::Packet> p);
 
-    bool DoEnqueue (Ptr<ns3::Packet> p);
+  Ptr<ns3::Packet> DoDequeue ();
 
-    Ptr<ns3::Packet> DoDequeue ();
+  Ptr<ns3::Packet> DoRemove ();
 
-    Ptr<ns3::Packet> DoRemove ();
-
-    Ptr<const ns3::Packet> DoPeek (void) const;
-
-
+  Ptr<const ns3::Packet> DoPeek (void) const;
 
    using Queue<Packet>::Head;
    using Queue<Packet>::Tail;
@@ -79,7 +78,7 @@ private:
   NS_LOG_TEMPLATE_DECLARE;
 }; 
 
-extern template class DiffServ<Packet>;
-} // namespace ns3
+  extern template class DiffServ<Packet>;
+  } // namespace ns3
 
 #endif /* DIFFSERV_H */

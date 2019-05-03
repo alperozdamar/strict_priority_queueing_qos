@@ -1,3 +1,15 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Filter: To Filter different packets
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
+
 #include "ns3/log.h"
 #include "source-ip-address.h"
 #include "traffic-class.h"

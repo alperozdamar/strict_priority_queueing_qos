@@ -47,9 +47,6 @@ namespace ns3{
 	   copyPacket -> RemoveHeader(udpHeader);
 	   uint32_t sourcePort = udpHeader.GetSourcePort();       
                              
-       //std::cout << " SourcePortNumber.sourcePort:" << sourcePort << std::endl;              
-       //std::cout << " SourcePortNumber.value:" << value << std::endl;
-        
 	   return sourcePort == value;
     }
 

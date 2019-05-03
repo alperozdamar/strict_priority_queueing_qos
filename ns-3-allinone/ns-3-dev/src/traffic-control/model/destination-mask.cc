@@ -1,3 +1,14 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Filter: To Filter different packets
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #include "ns3/log.h"
 #include "ns3/destination-mask.h"
 #include "ns3/ipv4-header.h"
@@ -40,11 +51,8 @@ DestinationMask::match (Ptr<Packet> packet)
   Ipv4Header ipv4Header;
   packet->PeekHeader (ipv4Header);
   Ipv4Address ipv4Address = ipv4Header.GetDestination ();
-
-  // if (value.IsMatch (ipv4Address, value.Get()))
-  // if(ipv4Address.IsEqual(this->value)){
-  if (true)
-    {
+  
+  if (ipv4Address.IsEqual(ipv4Address.CombineMask(this->value))){ 
       std::cout << "Mask:" << value << " Matched with Ipv4Address:" << ipv4Address << std::endl;
       return true;
     }

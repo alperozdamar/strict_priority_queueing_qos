@@ -1,4 +1,14 @@
-
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Strict Priority Queueing(SPQ) the queue: to give priority
+ * for sening the packet.
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #include "ns3/log.h"
 #include "ns3/spq.h"
 
@@ -49,9 +59,13 @@ SPQ<Packet>::Enqueue (Ptr<Packet> p)
 
   printf ("Test.SPQ.Enqueue\n");
   u_int32_t index = Classify (p);
-  std::cout << "Test.SPQ.Enqueue.index.matched: " << index
-            << ",priority:" << q_class[index]->priority_level << std::endl;
+//  std::cout << "Test.SPQ.Enqueue.index.matched: " << index
+//            << ",priority:" << q_class[index]->priority_level << std::endl;
   q_class[index]->Enqueue (p);
+//  std::cout << "Test.SPQ.Enqueue.index.matched: " << index
+//            << ",priority:" << q_class[index]->priority_level << std::endl;
+  DiffServ<Packet>::Enqueue(p);
+
   return true;
 }
 
@@ -64,6 +78,7 @@ SPQ<Packet>::Dequeue (void)
   Ptr<Packet> p;
   p = Schedule ();
   std::cout << "Schedule p in final Dequeue" << &p << std::endl;
+  DiffServ<Packet>::Dequeue();
   return p;
 }
 
@@ -99,7 +114,7 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
     {
       if ((q_class[i]->match (p)))
         {
-          std::cout << "SPQ.Matched!, for priority:" << q_class[i]->priority_level << std::endl;
+          //std::cout << "SPQ.Matched!, for priority:" << q_class[i]->priority_level << std::endl;
           return index = i;
         }
       else
@@ -108,12 +123,15 @@ SPQ<Packet>::Classify (Ptr<Packet> p)
           //std::cout<<"SPQ.q_class[i]->isDefault:"<< q_class[i]->isDefault <<std::endl;
           if (q_class[i]->isDefault)
             { 
-              std::cout << "SPQ.Not Matched! Putting to Default Queue. Index value is " << i
-                        << ", for priority:" << q_class[i]->priority_level << std::endl;
+            //  std::cout << "SPQ.Not Matched! Putting to Default Queue. Index value is " << i
+            //            << ", for priority:" << q_class[i]->priority_level << std::endl;
               index = i; 
             }
         }
     }
+
+  
+
   return index;
 }
 

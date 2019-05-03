@@ -1,3 +1,15 @@
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Diff Serv : A driver for user to drive different queue.
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
+
 #include "ns3/log.h"
 #include "ns3/enum.h"
 #include "ns3/uinteger.h"
@@ -95,8 +107,7 @@ DiffServ<Packet>::DoPeek () const
   NS_LOG_FUNCTION (this);
   auto iter = q_class.begin ();
   for (; iter != q_class.end (); iter++)
-    {
-      // std::cout<<*iter<<" ";
+    {      
       if ((**iter).Peek () != 0)
         { //NULL check!
           return (**iter).Peek ();
@@ -110,14 +121,6 @@ Ptr<ns3::Packet>
 DiffServ<Packet>::DoRemove (void)
 {
   NS_LOG_FUNCTION (this);
-  // auto iter = q_class.begin();
-  //   for(;iter!=q_class.end();iter++){
-  //      // std::cout<<*iter<<" ";
-  //         if((**iter).Peek()!=0){ //NULL check!
-  //             return (**iter).Remove();
-  //         }
-  //   }
-  // return 0;
 
   for (TrafficClass *tc : q_class)
     {

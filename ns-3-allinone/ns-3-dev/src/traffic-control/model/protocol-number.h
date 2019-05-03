@@ -1,4 +1,14 @@
-
+/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+/*
+ * Copyright (c) 2019 Rozita&Alper
+ *  
+ *  
+ * Filter: To Filter different packets
+ *
+ * 
+ * @author: Rozita Teymourzadeh <rteymourzadeh@usfca.edu>
+ * @author: Alper Ozdamar <alper.ozdamar@gmail.com>
+*/
 #ifndef PROTOCOL_NUMBER_H
 #define PROTOCOL_NUMBER_H
 
@@ -8,13 +18,6 @@
 #include "ns3/ipv4-address.h" 
 #include "ns3/ipv4-header.h"
 #include "ns3/point-to-point-net-device.h"
-
-// #include "ns3/log.h"
-// #include "ns3/integer.h"
-// #include "ns3/ppp-header.h"
-// #include "ns3/pointer.h"
-// #include "queue-disc.h"
-// #include "filter-element.h"
 
 namespace ns3 {
 
