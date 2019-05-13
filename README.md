@@ -1,8 +1,7 @@
 # Strict_Priority_Queueing_SPQ_Qos_Implementation
 
-The strict-high-priority queuing feature allows to configure traffic policing that prevents lower priority queues from being starved. The strict-priority queue does not cause starvation of other queues because the configured policer allows the queue to exceed the configured bandwidth only when other queues are not congested. If the interface is congested, the software directs strict-priority queues to the configured bandwidth.
-
-To prevent queue starvation of other queues, the configuration of output allows a limit for the amount of traffic that the queue can service. The software services all traffic in the strict-priority queue that is under the defined limit. When strict-priority traffic exceeds the limit, the policer marks the traffic in excess of the limit as out-of-profile. If the output port is congested, the software drops out-of-profile traffic. See [SPQ](https://www.juniper.net/documentation/en_US/junos/topics/concept/cos-strict-priority-queue-security-overview.html)
+The base class diffServe module was designed and implemented to serve different quality of service (QoS) model. Strict priority queuing (SPQ) was designed to allows to configure high priority traffic class to be served first before low priority traffic class. This project is concentrated on the base class module of QoS design to classify different traffic classes and to schedule them to be sent to the server based on their priority level provided. If the interface is congested, the software directs strict-priority queues to the configured bandwidth. The model proposed different types of filter to be matched with the packet characteristic and wrap them with filter element to be served in the different queue. SPQ application was implemented on the top of base class to simulate and verify base class functionality. 
+ See [SPQ](https://www.juniper.net/documentation/en_US/junos/topics/concept/cos-strict-priority-queue-security-overview.html)
 
 ## Project Description
     
